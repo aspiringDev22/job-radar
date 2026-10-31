@@ -1,0 +1,28 @@
+---
+description: JobRadar product scope, stack, and iteration 2 working rules
+alwaysApply: true
+---
+
+# JobRadar
+
+Public job board for Indian startups and India roles. Current spec: `docs/prd.md`. Active work: `docs/iteration-2.md`. Do one section of that file at a time. Do not start the next section until asked.
+
+Out of scope until iteration 2 is done: Google login, CV upload, embeddings, saved jobs, tracker, email digests, ads. `AdSlot` renders nothing.
+
+## Constraints
+
+Jobs come only from public company career APIs. Never scrape LinkedIn, Indeed, Naukri, Glassdoor, or AmbitionBox. One failing company must not stop a sync. Keep a 1 second delay per host. A failed fetch must not close that company's roles.
+
+Ask before adding a dependency. DB changes go through Drizzle migrations. Normalization is small pure functions with unit tests. Do not refactor feed adapters while doing an unrelated section.
+
+## Stack and commands
+
+Next.js App Router, TypeScript strict, Tailwind, shadcn/ui, Drizzle, Postgres with pgvector, Zod, pnpm.
+
+- `pnpm dev` — app at http://localhost:3000
+- `pnpm db:migrate` — apply `drizzle/`
+- `pnpm db:seed` — upsert `data/companies.json`
+- `pnpm sync` — pull career feeds; skips a company synced in the last 4 hours; `--force` overrides
+- `pnpm test` — adapter and normalization tests
+
+Schema lives in `src/db/schema`. Company rows are `{ name, ats_type, ats_slug, website?, locations? }`.

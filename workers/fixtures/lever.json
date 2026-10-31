@@ -1,0 +1,31 @@
+[
+  {
+    "id": "2a55d6c9-c564-443a-be3e-a3851db5a93b",
+    "text": "Account Executive",
+    "categories": {
+      "commitment": "Permanent",
+      "location": "New York, NY",
+      "allLocations": ["New York, NY"]
+    },
+    "descriptionPlain": "Sell the platform to new customers.",
+    "description": "<p>Sell the platform to new customers.</p>",
+    "additionalPlain": "The United States base range for this position is $87,069-$124,385 plus equity.",
+    "hostedUrl": "https://jobs.lever.co/spotify/2a55d6c9-c564-443a-be3e-a3851db5a93b",
+    "applyUrl": "https://jobs.lever.co/spotify/2a55d6c9-c564-443a-be3e-a3851db5a93b/apply",
+    "createdAt": 1792767640768,
+    "workplaceType": "hybrid"
+  },
+  {
+    "id": "missing-title"
+  },
+  {
+    "id": "intern-1",
+    "text": "Engineering Intern",
+    "categories": { "commitment": "Internship", "location": "Remote" },
+    "descriptionPlain": "Spend the summer on the team.",
+    "hostedUrl": "https://jobs.lever.co/example/intern-1",
+    "applyUrl": "https://jobs.lever.co/example/intern-1/apply",
+    "createdAt": 1760000000000,
+    "workplaceType": "remote"
+  }
+]

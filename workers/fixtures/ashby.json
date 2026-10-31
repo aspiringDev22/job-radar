@@ -1,0 +1,29 @@
+{
+  "jobs": [
+    {
+      "id": "d3bc1ced-3ce4-4086-a050-555055dbb1ff",
+      "title": "Senior / Staff Fullstack Engineer",
+      "employmentType": "FullTime",
+      "location": "Europe",
+      "publishedAt": "2021-04-27T20:13:45.158+00:00",
+      "isListed": true,
+      "isRemote": null,
+      "workplaceType": "Remote",
+      "jobUrl": "https://jobs.ashbyhq.com/linear/d3bc1ced-3ce4-4086-a050-555055dbb1ff",
+      "applyUrl": "https://jobs.ashbyhq.com/linear/d3bc1ced-3ce4-4086-a050-555055dbb1ff/application",
+      "descriptionHtml": "<p>Build the product.</p>",
+      "descriptionPlain": "Build the product.",
+      "compensation": {
+        "compensationTierSummary": null,
+        "scrapeableCompensationSalarySummary": "$180,000 – $240,000"
+      }
+    },
+    {
+      "id": "hidden-role",
+      "title": "Hidden Role",
+      "isListed": false,
+      "location": "Remote",
+      "applyUrl": "https://example.com/hidden"
+    }
+  ]
+}

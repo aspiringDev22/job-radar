@@ -1,0 +1,24 @@
+{
+  "jobs": [
+    {
+      "id": 8172510,
+      "title": "Senior Abuse Investigator",
+      "absolute_url": "https://stripe.com/jobs/search?gh_jid=8172510",
+      "location": { "name": "Remote - US" },
+      "first_published": "2026-09-09T10:50:29-04:00",
+      "content": "&lt;h2&gt;Who we are&lt;/h2&gt;&lt;p&gt;Keep the platform safe.&lt;/p&gt;"
+    },
+    {
+      "id": "not-a-number",
+      "title": "This row is invalid"
+    },
+    {
+      "id": 100,
+      "title": "Office Coordinator",
+      "absolute_url": "https://example.com/jobs/100",
+      "location": { "name": "  New York,  NY  " },
+      "first_published": "2026-10-01T12:00:00Z",
+      "content": "<p>Coordinate the office.</p>"
+    }
+  ]
+}

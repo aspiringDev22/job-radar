@@ -1,0 +1,17 @@
+---
+description: Drizzle schema conventions for JobRadar
+globs: src/db/**/*.ts
+alwaysApply: false
+---
+
+# Data model
+
+Postgres via Drizzle. Enable pgvector before any `vector` column.
+
+- `companies`: name, slug, website, logo, `ats_type`, `ats_slug`, active, `last_synced_at`
+- `jobs`: unique `(company_id, external_id)`; index on `is_active, posted_at`; `embedding vector(1536)`
+- `users`: Auth.js columns plus `profile_json`, `profile_embedding`, `preferences_json`
+- `saved_jobs`: `user_id`, `job_id`, status (`saved`, `applied`, `interview`, `rejected`), notes, `updated_at`
+- `sync_runs`: source, timings, `jobs_found`, `jobs_new`, `jobs_closed`, error
+
+Use `timestamptz` and snake_case SQL names. Keep Auth.js property names (`id`, `email`, `emailVerified`, `userId`, `sessionToken`) so the Drizzle adapter can take these tables in Phase 4.

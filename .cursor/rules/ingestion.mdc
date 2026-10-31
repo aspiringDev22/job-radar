@@ -1,0 +1,21 @@
+---
+description: ATS adapter and sync worker rules
+globs: workers/**/*.ts
+alwaysApply: false
+---
+
+# Ingestion
+
+One adapter per ATS in `workers/adapters`. Each adapter returns the same shape, validated with Zod.
+
+```typescript
+interface Adapter {
+  fetchJobs(company: Company): Promise<NormalizedJob[]>;
+}
+```
+
+Greenhouse, Lever, Ashby, Workable, SmartRecruiters, Recruitee, Workday, and Amazon are implemented. Keka comes later. Workday boards are stored as `wd5/tenant/site`, and only India locations are kept. Amazon stores India engineering, science, product, design, and security roles from `amazon.jobs`. `locations: india_or_remote` on a company keeps India locations and remote roles. Verify each endpoint against a live response before trusting it.
+
+Sync upserts on `(company_id, external_id)`, sets `last_seen_at`, then marks that company's unseen jobs `is_active=false`. One failing company must not crash the run. Write the outcome to `sync_runs`.
+
+Be polite: a concurrency limit, a per-host delay, retries with backoff, and a descriptive User-Agent. Do not sync the same company more than once every few hours. Workers are scripts, not request handlers.

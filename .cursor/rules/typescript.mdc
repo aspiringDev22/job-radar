@@ -1,0 +1,20 @@
+---
+description: TypeScript and validation boundaries
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# TypeScript
+
+- Strict mode. Do not use `any`. Prefer `unknown` and narrow it.
+- Validate every external boundary with Zod: ATS payloads, env, JSON files, and LLM output.
+- Server Components by default. Add `"use client"` only for state, events, or browser APIs.
+- Keep files small and named for one job.
+- Do not hardcode secrets. Read them from the environment and document new keys in `.env.example`.
+
+```typescript
+const parsed = companiesFileSchema.safeParse(input);
+if (!parsed.success) {
+  throw new Error("Invalid companies file");
+}
+```

@@ -1,0 +1,385 @@
+[
+  {
+    "name": "100ms",
+    "ats_type": "lever",
+    "ats_slug": "100ms",
+    "website": "https://www.100ms.live"
+  },
+  {
+    "name": "Aftershoot",
+    "ats_type": "recruitee",
+    "ats_slug": "aftershoot",
+    "website": "https://aftershoot.com"
+  },
+  {
+    "name": "AbhiBus",
+    "ats_type": "smartrecruiters",
+    "ats_slug": "AbhiBus",
+    "website": "https://www.abhibus.com"
+  },
+  {
+    "name": "Adobe",
+    "ats_type": "workday",
+    "ats_slug": "wd5/adobe/external_experienced",
+    "website": "https://www.adobe.com"
+  },
+  {
+    "name": "Airbound",
+    "ats_type": "ashby",
+    "ats_slug": "airbound",
+    "website": "https://www.airbound.com"
+  },
+  {
+    "name": "Apna",
+    "ats_type": "workable",
+    "ats_slug": "apna",
+    "website": "https://apna.co"
+  },
+  {
+    "name": "Atlan",
+    "ats_type": "ashby",
+    "ats_slug": "atlan",
+    "website": "https://atlan.com"
+  },
+  {
+    "name": "Atlys",
+    "ats_type": "ashby",
+    "ats_slug": "atlys",
+    "website": "https://www.atlys.com"
+  },
+  {
+    "name": "Bolna",
+    "ats_type": "ashby",
+    "ats_slug": "bolna",
+    "website": "https://www.bolna.ai"
+  },
+  {
+    "name": "Bureau",
+    "ats_type": "ashby",
+    "ats_slug": "bureau",
+    "website": "https://bureau.id"
+  },
+  {
+    "name": "CRED",
+    "ats_type": "lever",
+    "ats_slug": "cred",
+    "website": "https://cred.club"
+  },
+  {
+    "name": "Cisco",
+    "ats_type": "workday",
+    "ats_slug": "wd5/cisco/cisco_careers",
+    "website": "https://www.cisco.com"
+  },
+  {
+    "name": "CloudSEK",
+    "ats_type": "greenhouse",
+    "ats_slug": "cloudsek",
+    "website": "https://www.cloudsek.com"
+  },
+  {
+    "name": "Contentstack",
+    "ats_type": "greenhouse",
+    "ats_slug": "contentstack",
+    "website": "https://www.contentstack.com"
+  },
+  {
+    "name": "Druva",
+    "ats_type": "greenhouse",
+    "ats_slug": "druva",
+    "website": "https://www.druva.com"
+  },
+  {
+    "name": "Exponent Energy",
+    "ats_type": "workable",
+    "ats_slug": "exponent-energy",
+    "website": "https://www.exponent.energy"
+  },
+  {
+    "name": "FamPay",
+    "ats_type": "lever",
+    "ats_slug": "fampay",
+    "website": "https://fampay.in"
+  },
+  {
+    "name": "Freshworks",
+    "ats_type": "smartrecruiters",
+    "ats_slug": "Freshworks",
+    "website": "https://www.freshworks.com"
+  },
+  {
+    "name": "Glance",
+    "ats_type": "greenhouse",
+    "ats_slug": "glance",
+    "website": "https://glance.com"
+  },
+  {
+    "name": "Glomo",
+    "ats_type": "ashby",
+    "ats_slug": "glomo",
+    "website": "https://www.glomo.one"
+  },
+  {
+    "name": "Groww",
+    "ats_type": "greenhouse",
+    "ats_slug": "groww",
+    "website": "https://groww.in"
+  },
+  {
+    "name": "Headout",
+    "ats_type": "ashby",
+    "ats_slug": "headout",
+    "website": "https://www.headout.com"
+  },
+  {
+    "name": "Hevo",
+    "ats_type": "lever",
+    "ats_slug": "hevodata",
+    "website": "https://hevodata.com"
+  },
+  {
+    "name": "HighRadius",
+    "ats_type": "greenhouse",
+    "ats_slug": "highradius",
+    "website": "https://www.highradius.com"
+  },
+  {
+    "name": "InMobi",
+    "ats_type": "greenhouse",
+    "ats_slug": "inmobi",
+    "website": "https://www.inmobi.com"
+  },
+  {
+    "name": "Intel",
+    "ats_type": "workday",
+    "ats_slug": "wd1/intel/External",
+    "website": "https://www.intel.com"
+  },
+  {
+    "name": "ixigo",
+    "ats_type": "smartrecruiters",
+    "ats_slug": "ixigo",
+    "website": "https://www.ixigo.com"
+  },
+  {
+    "name": "Lokal",
+    "ats_type": "smartrecruiters",
+    "ats_slug": "Lokal",
+    "website": "https://www.lokalapps.com"
+  },
+  {
+    "name": "Meesho",
+    "ats_type": "lever",
+    "ats_slug": "meesho",
+    "website": "https://www.meesho.com"
+  },
+  {
+    "name": "Mettl",
+    "ats_type": "smartrecruiters",
+    "ats_slug": "MercerMettl",
+    "website": "https://www.mettl.com"
+  },
+  {
+    "name": "Mindtickle",
+    "ats_type": "lever",
+    "ats_slug": "mindtickle",
+    "website": "https://www.mindtickle.com"
+  },
+  {
+    "name": "Netradyne",
+    "ats_type": "greenhouse",
+    "ats_slug": "netradyne",
+    "website": "https://www.netradyne.com"
+  },
+  {
+    "name": "Nvidia",
+    "ats_type": "workday",
+    "ats_slug": "wd5/nvidia/NVIDIAExternalCareerSite",
+    "website": "https://www.nvidia.com"
+  },
+  {
+    "name": "Observe.AI",
+    "ats_type": "greenhouse",
+    "ats_slug": "observeai",
+    "website": "https://www.observe.ai"
+  },
+  {
+    "name": "Paytm",
+    "ats_type": "lever",
+    "ats_slug": "paytm",
+    "website": "https://paytm.com"
+  },
+  {
+    "name": "PayPal",
+    "ats_type": "workday",
+    "ats_slug": "wd1/paypal/jobs",
+    "website": "https://www.paypal.com"
+  },
+  {
+    "name": "Prodigal",
+    "ats_type": "greenhouse",
+    "ats_slug": "prodigal",
+    "website": "https://prodigaltech.com"
+  },
+  {
+    "name": "PubMatic",
+    "ats_type": "greenhouse",
+    "ats_slug": "pubmatic",
+    "website": "https://pubmatic.com"
+  },
+  {
+    "name": "Razorpay",
+    "ats_type": "greenhouse",
+    "ats_slug": "razorpaysoftwareprivatelimited",
+    "website": "https://razorpay.com"
+  },
+  {
+    "name": "Sarvam AI",
+    "ats_type": "ashby",
+    "ats_slug": "sarvam",
+    "website": "https://www.sarvam.ai"
+  },
+  {
+    "name": "Salesforce",
+    "ats_type": "workday",
+    "ats_slug": "wd12/salesforce/External_Career_Site",
+    "website": "https://www.salesforce.com"
+  },
+  {
+    "name": "Sigmoid",
+    "ats_type": "greenhouse",
+    "ats_slug": "sigmoid",
+    "website": "https://www.sigmoid.com"
+  },
+  {
+    "name": "SigNoz",
+    "ats_type": "ashby",
+    "ats_slug": "signoz",
+    "website": "https://signoz.io"
+  },
+  {
+    "name": "Stable Money",
+    "ats_type": "lever",
+    "ats_slug": "stable-money1",
+    "website": "https://stablemoney.in"
+  },
+  {
+    "name": "Swiggy",
+    "ats_type": "smartrecruiters",
+    "ats_slug": "SWIGGY",
+    "website": "https://www.swiggy.com"
+  },
+  {
+    "name": "Tekion",
+    "ats_type": "ashby",
+    "ats_slug": "tekion",
+    "website": "https://tekion.com"
+  },
+  {
+    "name": "Zenoti",
+    "ats_type": "greenhouse",
+    "ats_slug": "zenoti",
+    "website": "https://www.zenoti.com"
+  },
+  {
+    "name": "Agoda",
+    "ats_type": "greenhouse",
+    "ats_slug": "agoda",
+    "website": "https://www.agoda.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Airbnb",
+    "ats_type": "greenhouse",
+    "ats_slug": "airbnb",
+    "website": "https://www.airbnb.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "AlphaSense",
+    "ats_type": "greenhouse",
+    "ats_slug": "alphasense",
+    "website": "https://www.alpha-sense.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Amazon",
+    "ats_type": "amazon",
+    "ats_slug": "india",
+    "website": "https://www.amazon.com"
+  },
+  {
+    "name": "Genea",
+    "ats_type": "greenhouse",
+    "ats_slug": "genea",
+    "website": "https://www.getgenea.com"
+  },
+  {
+    "name": "HighLevel",
+    "ats_type": "lever",
+    "ats_slug": "gohighlevel",
+    "website": "https://www.gohighlevel.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Innovaccer",
+    "ats_type": "workable",
+    "ats_slug": "innovaccer-analytics",
+    "website": "https://innovaccer.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Navan",
+    "ats_type": "greenhouse",
+    "ats_slug": "tripactions",
+    "website": "https://navan.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Netskope",
+    "ats_type": "greenhouse",
+    "ats_slug": "netskope",
+    "website": "https://www.netskope.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Ocrolus",
+    "ats_type": "ashby",
+    "ats_slug": "ocrolus",
+    "website": "https://www.ocrolus.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Payoneer",
+    "ats_type": "greenhouse",
+    "ats_slug": "payoneer",
+    "website": "https://www.payoneer.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Sprinklr",
+    "ats_type": "workday",
+    "ats_slug": "wd1/sprinklr/careers",
+    "website": "https://www.sprinklr.com"
+  },
+  {
+    "name": "Sumo Logic",
+    "ats_type": "greenhouse",
+    "ats_slug": "sumologic",
+    "website": "https://www.sumologic.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Tamara",
+    "ats_type": "greenhouse",
+    "ats_slug": "tamara",
+    "website": "https://tamara.co",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Writesonic",
+    "ats_type": "workable",
+    "ats_slug": "writesonic",
+    "website": "https://writesonic.com"
+  }
+]

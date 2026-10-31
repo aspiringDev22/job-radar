@@ -1,0 +1,22 @@
+{
+  "id": "744000157801788",
+  "name": "Senior Software Developer - Backend",
+  "releasedDate": "2026-10-26T12:27:29.704Z",
+  "applyUrl": "https://jobs.smartrecruiters.com/ixigo/744000157801788",
+  "company": { "identifier": "ixigo", "name": "ixigo" },
+  "location": {
+    "city": "Gurugram",
+    "country": "in",
+    "remote": false,
+    "fullLocation": "Gurugram, , India"
+  },
+  "typeOfEmployment": { "id": "permanent", "label": "Full-time" },
+  "experienceLevel": { "id": "mid_senior_level", "label": "Mid-Senior level" },
+  "jobAd": {
+    "sections": {
+      "companyDescription": { "title": "Company Description", "text": "<p>ixigo helps Indian travellers.</p>" },
+      "jobDescription": { "title": "Job Description", "text": "<p>Build the booking platform.</p>" },
+      "qualifications": { "title": "Qualifications", "text": "<p>3 years of Java.</p>" }
+    }
+  }
+}

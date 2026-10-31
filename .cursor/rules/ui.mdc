@@ -1,0 +1,19 @@
+---
+description: JobRadar layout and visual rules
+globs: src/**/*.tsx
+alwaysApply: false
+---
+
+# UI
+
+Minimal. Whitespace, one accent (the primary token), hairline borders, no heavy shadows.
+
+Desktop: filter sidebar, job list, detail pane. On mobile the sidebar collapses into a Sheet, and a job opens as its own page.
+
+A job row shows a logo or initial, title, company, location, remote badge, posted-ago, source badge, and save. The match score chip appears only on For you.
+
+Use shadcn Command, Select, Checkbox, Badge, Sheet, Tabs, Skeleton, Sonner, and Dialog. "/" focuses search. Arrow keys move through the list.
+
+Every list has a skeleton, an empty state, and an error state.
+
+Place `<AdSlot />` in the sidebar and between list items. It renders nothing until ads are added.

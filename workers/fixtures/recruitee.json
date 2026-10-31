@@ -1,0 +1,18 @@
+{
+  "offers": [
+    {
+      "id": 421,
+      "title": "Product Engineer",
+      "description": "<p>Ship the learning product.</p>",
+      "requirements": "<p>You have built a product before.</p>",
+      "city": "Bengaluru",
+      "country": "India",
+      "location": "Bengaluru, India",
+      "remote": true,
+      "published_at": "2026-10-20T09:00:00.000Z",
+      "careers_url": "https://example.recruitee.com/o/product-engineer",
+      "careers_apply_url": "https://example.recruitee.com/o/product-engineer/c/new",
+      "employment_type_code": "fulltime"
+    }
+  ]
+}
