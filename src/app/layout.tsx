@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 
-import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/shared/components/theme-provider";
+import { Toaster } from "@/shared/components/ui/sonner";
 
 import "./globals.css";
 

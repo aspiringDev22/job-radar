@@ -22,7 +22,13 @@ Next.js App Router, TypeScript strict, Tailwind, shadcn/ui, Drizzle, Postgres wi
 - `pnpm dev` — app at http://localhost:3000
 - `pnpm db:migrate` — apply `drizzle/`
 - `pnpm db:seed` — upsert `data/companies.json`
-- `pnpm sync` — pull career feeds; skips a company synced in the last 4 hours; `--force` overrides
-- `pnpm test` — adapter and normalization tests
+- `pnpm sync` — pull career feeds; skips a company synced in the last 4 hours; `--force` overrides, `--only <slugs>` limits, `--dry-run` previews. Scheduled every 6 hours by `.github/workflows/sync.yml`.
+- `pnpm discover` — probe public ATS APIs and careers pages for `data/seed-domains.csv`; writes `data/discovered.json` and `data/needs_manual.csv` for review, never `companies.json`
+- `pnpm test` — every `src/**/*.test.ts`
+- `pnpm lint` — ESLint, including the architecture boundaries
 
-Schema lives in `src/db/schema`. Company rows are `{ name, ats_type, ats_slug, website?, locations? }`.
+Company rows are `{ name, ats_type, ats_slug, website?, locations? }`.
+
+## Architecture
+
+Feature-based; read `docs/architecture.md` before adding files. Routes in `src/app` stay thin and compose features. Code in `src/features/<name>` is private to that feature except its public entries: `index.ts` (pure, safe anywhere), `schema.ts` (tables), `server.ts` (server-only loaders) and `components.ts` (UI). `src/shared` never imports a feature. Client components import other features only through `index.ts`. Files Node loads (`index`, `schema`, `constants`, `types`, `lib/`, `ingestion/`, `shared/db`, `shared/lib`) use relative `.ts` imports, never `@/`.

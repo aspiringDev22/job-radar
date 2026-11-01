@@ -1,12 +1,12 @@
 ---
 description: ATS adapter and sync worker rules
-globs: workers/**/*.ts
+globs: src/features/ingestion/**/*.ts
 alwaysApply: false
 ---
 
 # Ingestion
 
-One adapter per ATS in `workers/adapters`. Each adapter returns the same shape, validated with Zod.
+Lives in `src/features/ingestion` and runs under plain Node, so imports are relative and end in `.ts`. One adapter per ATS in `src/features/ingestion/adapters`. Each adapter returns the same shape, validated with Zod.
 
 ```typescript
 interface Adapter {
@@ -14,8 +14,10 @@ interface Adapter {
 }
 ```
 
-Greenhouse, Lever, Ashby, Workable, SmartRecruiters, Recruitee, Workday, and Amazon are implemented. Keka comes later. Workday boards are stored as `wd5/tenant/site`, and only India locations are kept. Amazon stores India engineering, science, product, design, and security roles from `amazon.jobs`. `locations: india_or_remote` on a company keeps India locations and remote roles. Verify each endpoint against a live response before trusting it.
+Greenhouse, Lever, Ashby, Workable, SmartRecruiters, Recruitee, Workday, Amazon and Keka are implemented. Keka is read from `https://{slug}.keka.com/careers/api/jobs/default/active`: its robots.txt allows only `/careers`, so never request other Keka paths. Keka salaries are not imported. Workday boards are stored as `wd5/tenant/site`, and only India locations are kept. Amazon stores every India role from `amazon.jobs`, with its category in `jobs.department`. The board shows only `AMAZON_TECHNICAL_DEPARTMENTS` (jobs constants) unless "Include Amazon operations" is on. `classifyPlace` sets `country = India` for any Indian city or state in the location, and the board's India-only default relies on it. `locations: india_or_remote` on a company keeps India locations and remote roles. Verify each endpoint against a live response before trusting it.
 
-Sync upserts on `(company_id, external_id)`, sets `last_seen_at`, then marks that company's unseen jobs `is_active=false`. One failing company must not crash the run. Write the outcome to `sync_runs`.
+Sync upserts on `(company_id, external_id)`, sets `last_seen_at`, then closes that company's unseen jobs only after a successful fetch. One failing company must not crash the run or make it exit non-zero. Each run writes one `sync_runs` row with run totals, and one `company_syncs` row per company it fetched. `scripts/sync.ts` only parses flags. The run lives in `server/run-sync.ts`, and one company's sync in `server/sync-company.ts`.
 
-Be polite: a concurrency limit, a per-host delay, retries with backoff, and a descriptive User-Agent. Do not sync the same company more than once every few hours. Workers are scripts, not request handlers.
+`pnpm discover` probes public ATS APIs and careers pages (after `robots.txt`) for companies in `data/seed-domains.csv`, five at a time with an eight-second timeout and one retry. It writes `data/discovered.json` and `data/needs_manual.csv` and never edits `companies.json`. Rows are reviewed by their sample title and India role count before they are merged.
+
+Be polite: a concurrency limit, a per-host delay, retries with backoff, and a descriptive User-Agent. Do not sync the same company more than once every four hours unless `--force`. `.github/workflows/sync.yml` runs `pnpm sync --scheduled` every six hours, and an advisory lock keeps runs from overlapping. Workers are scripts, not request handlers.

@@ -1,0 +1,114 @@
+[
+  {
+    "id": 145087,
+    "title": "Channel Partner Operations Manager",
+    "description": "<h1 style=\"margin-top: 0px; margin-bottom: 0px;\"><strong style=\"background-color: transparent; color: rgb(0, 0, 0);\">Channel &amp; Partnership Operations Manager – BFSI</strong></h1><div><strong style=\"background-color: transparent; color: rgb(0, 0, 0);\">Company:</strong><span style=\"background-color: transparent; color: rgb(0, 0, 0);\"> Signzy</span></div><div><strong style=\"background-color: tran</div>",
+    "departmentIdentifier": "a9c08bc1-fa86-4c78-92ec-5e095693c040",
+    "departmentName": "Sales",
+    "excerpt": "Channel &amp; Partnership Operations Manager – BFSICompany: SignzyLocation: Gurgaon, on siteExperience: 3+ YearsAbout Si",
+    "jobLocations": [
+      {
+        "id": 18921,
+        "name": "Delhi/Gurgaon",
+        "city": "Gurgaon",
+        "state": "DL",
+        "countryCode": "IN",
+        "countryName": "India"
+      }
+    ],
+    "jobType": 2,
+    "experience": "3+ years",
+    "jobNumber": "JOB1271",
+    "salaryRange": {
+      "currency": "INR",
+      "salaryPeriod": 0,
+      "cultureInfo": "en-IN"
+    },
+    "salaryRangeFormat": "",
+    "publishedOn": "2026-10-19T11:03:04.277Z",
+    "publishedSinceDays": 13,
+    "skillNames": []
+  },
+  {
+    "id": 132173,
+    "title": "Manager - CSR Partnerships",
+    "description": "<div style=\"text-align: justify;\"><strong>About Us:</strong></div><div>At Teachmint, we believe that education moves the world forward and deserves the best technology. As a pioneer in AI-powered educational technology, we deliver a unified ecosystem that brings together AI, a connected classroom app, and smart hardware in one place. This ensures teachers spend less time managing tools and more ti</div>",
+    "departmentIdentifier": "460ce6b6-58d4-4b39-98a8-7fdf6d31df54",
+    "departmentName": "Sales - India and SAARC",
+    "excerpt": "About Us:At Teachmint, we believe that education moves the world forward and deserves the best technology. As a pioneer ",
+    "jobLocations": [
+      {
+        "id": 16201,
+        "name": "Bangalore",
+        "city": "Bangalore",
+        "state": "KA",
+        "countryCode": "IN",
+        "countryName": "India"
+      },
+      {
+        "id": 30414,
+        "name": "Chennai",
+        "city": "Chennai",
+        "state": "Tamil Nadu",
+        "countryCode": "IN",
+        "countryName": "India"
+      },
+      {
+        "id": 30412,
+        "name": "Hyderabad",
+        "city": "Hyderabad",
+        "state": "Telangana",
+        "countryCode": "IN",
+        "countryName": "India"
+      },
+      {
+        "id": 30416,
+        "name": "Mumbai",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "countryCode": "IN",
+        "countryName": "India"
+      }
+    ],
+    "jobType": 2,
+    "experience": "3-8",
+    "salaryRange": {
+      "currency": "INR",
+      "salaryPeriod": 0,
+      "cultureInfo": "en-IN"
+    },
+    "salaryRangeFormat": "",
+    "publishedOn": "2026-08-12T05:43:22.783Z",
+    "publishedSinceDays": 81,
+    "skillNames": []
+  },
+  {
+    "id": 145903,
+    "title": "Intern — International Business",
+    "description": "<div><strong>Role: Intern — International Business</strong></div><div><strong>Location: Bangalore (in-office)</strong></div><div><strong>Duration: 6 months, full-time</strong></div><div><strong>Stipend: As per company standards</strong></div><div><br></div><div><strong style=\"color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);\">About Us:</strong></div><div><span style=\"color: rgb(0, 0, 0); </div>",
+    "departmentIdentifier": "b94514d4-a787-4f7b-b3eb-a402f3693450",
+    "departmentName": "GTM International",
+    "excerpt": "Role: Intern — International BusinessLocation: Bangalore (in-office)Duration: 6 months, full-timeStipend: As per company",
+    "jobLocations": [
+      {
+        "id": 16201,
+        "name": "Bangalore",
+        "city": "Bangalore",
+        "state": "KA",
+        "countryCode": "IN",
+        "countryName": "India"
+      }
+    ],
+    "jobType": 2,
+    "experience": "0-1 year",
+    "salaryRange": {
+      "currency": "INR",
+      "salaryPeriod": 0,
+      "cultureInfo": "en-IN"
+    },
+    "salaryRangeFormat": "",
+    "publishedOn": "2026-10-28T08:52:42.227Z",
+    "publishedSinceDays": 4,
+    "skillNames": []
+  }
+]

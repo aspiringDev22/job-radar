@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { siteUrl } from "@/lib/site";
+import { siteUrl } from "@/shared/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   const base = siteUrl();
@@ -8,6 +8,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
+      disallow: "/admin",
     },
     sitemap: `${base}/sitemap.xml`,
   };

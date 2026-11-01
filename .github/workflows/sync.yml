@@ -1,0 +1,49 @@
+name: Sync career feeds
+
+on:
+  schedule:
+    # Every 6 hours (UTC), at 17 past to stay clear of the top-of-hour queue.
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Ignore the 4 hour per-company skip window
+        type: boolean
+        default: false
+      only:
+        description: Comma-separated company slugs; empty syncs every company
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+# One sync at a time. A run that is still going when the next one is due finishes first.
+concurrency:
+  group: sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Sync
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          EVENT: ${{ github.event_name }}
+          FORCE: ${{ inputs.force }}
+          ONLY: ${{ inputs.only }}
+        run: |
+          args=()
+          if [ "$EVENT" = "schedule" ]; then args+=(--scheduled); fi
+          if [ "$FORCE" = "true" ]; then args+=(--force); fi
+          if [ -n "$ONLY" ]; then args+=(--only "$ONLY"); fi
+          pnpm sync "${args[@]}"

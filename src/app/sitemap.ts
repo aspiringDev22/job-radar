@@ -1,8 +1,8 @@
 import type { MetadataRoute } from "next";
 import { connection } from "next/server";
 
-import { loadSitemapJobs } from "@/lib/board";
-import { siteUrl } from "@/lib/site";
+import { loadSitemapJobs } from "@/features/jobs/server";
+import { siteUrl } from "@/shared/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   await connection();

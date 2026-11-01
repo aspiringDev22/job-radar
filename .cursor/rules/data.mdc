@@ -1,17 +1,20 @@
 ---
 description: Drizzle schema conventions for JobRadar
-globs: src/db/**/*.ts
+globs: src/features/*/schema.ts,src/shared/db/**/*.ts
 alwaysApply: false
 ---
 
 # Data model
 
-Postgres via Drizzle. Enable pgvector before any `vector` column.
+Postgres via Drizzle. Enable pgvector before any `vector` column. Each table lives in its owning feature's `schema.ts` (`companies`, `jobs`, `ingestion` for `sync_runs` and `company_syncs`, `auth`, `saved-jobs`, `suggestions`); drizzle-kit reads `src/features/*/schema.ts`. Enum values live in that feature's `constants.ts`, and `schema.ts` builds the `pgEnum` from them.
 
-- `companies`: name, slug, website, logo, `ats_type`, `ats_slug`, active, `last_synced_at`
-- `jobs`: unique `(company_id, external_id)`; index on `is_active, posted_at`; `embedding vector(1536)`
+- `companies`: name, slug, website, logo, `ats_type`, `ats_slug`, active, `last_synced_at` (last attempt), `last_success_at`, `last_error`, `consecutive_failures`, `last_role_count`
+- `companies.search_vector`: generated tsvector of the name, weight B
+- `jobs`: unique `(company_id, external_id)`; index on `is_active, posted_at`; `embedding vector(1536)`; `search_vector` generated tsvector (title A, location C, description D). Never write the generated columns. `department` is the feed's own category or department (Amazon and Keka for now). `country` is `India` whenever the location names an Indian place.
 - `users`: Auth.js columns plus `profile_json`, `profile_embedding`, `preferences_json`
 - `saved_jobs`: `user_id`, `job_id`, status (`saved`, `applied`, `interview`, `rejected`), notes, `updated_at`
-- `sync_runs`: source, timings, `jobs_found`, `jobs_new`, `jobs_closed`, error
+- `sync_runs`: one row per `pnpm sync` run: `trigger` (`manual`, `scheduled`), `forced`, timings, `companies_ok`, `companies_failed`, `companies_skipped`, `roles_added`, `roles_reopened`, `roles_closed`, error
+- `company_suggestions`: url, `host` (unique, without www), note, status (`new`, `added`, `rejected`), `times_suggested`, `created_at`, `last_suggested_at`
+- `company_syncs`: one row per company a run fetched: `run_id`, `company_id`, source, timings, `jobs_found`, `jobs_new`, `jobs_reopened`, `jobs_closed`, error
 
 Use `timestamptz` and snake_case SQL names. Keep Auth.js property names (`id`, `email`, `emailVerified`, `userId`, `sessionToken`) so the Drizzle adapter can take these tables in Phase 4.

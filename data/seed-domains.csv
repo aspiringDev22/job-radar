@@ -1,0 +1,445 @@
+name,domain
+# Seed list for pnpm discover. Indian startups and India-based product companies,
+# then global product companies with large India engineering offices.
+# Companies already in data/companies.json are skipped by the script.
+# Fintech, payments, insurance
+Zerodha,zerodha.com
+PhonePe,phonepe.com
+Pine Labs,pinelabs.com
+BharatPe,bharatpe.com
+Cashfree Payments,cashfree.com
+Juspay,juspay.in
+Jupiter,jupiter.money
+Fi Money,fi.money
+slice,sliceit.com
+Uni Cards,uni.club
+OneCard,getonecard.app
+Zeta,zeta.tech
+M2P Fintech,m2pfintech.com
+Open Financial Technologies,open.money
+Khatabook,khatabook.com
+OkCredit,okcredit.in
+Lendingkart,lendingkart.com
+KreditBee,kreditbee.in
+Moneyview,moneyview.in
+Navi,navi.com
+smallcase,smallcase.com
+INDmoney,indmoney.com
+Upstox,upstox.com
+Dhan,dhan.co
+Kuvera,kuvera.in
+Scripbox,scripbox.com
+ET Money,etmoney.com
+Policybazaar,policybazaar.com
+Paisabazaar,paisabazaar.com
+Acko,acko.com
+Digit Insurance,godigit.com
+Plum,plumhq.com
+Onsurity,onsurity.com
+Loop Health,loophealth.com
+Turtlemint,turtlemint.com
+InsuranceDekho,insurancedekho.com
+Ditto Insurance,joinditto.in
+Perfios,perfios.com
+Signzy,signzy.com
+IDfy,idfy.com
+HyperVerge,hyperverge.co
+Setu,setu.co
+Decentro,decentro.tech
+Rupeek,rupeek.com
+Indifi,indifi.com
+FlexiLoans,flexiloans.com
+Easebuzz,easebuzz.in
+PayU,payu.in
+MobiKwik,mobikwik.com
+Yubi,go-yubi.com
+Jar,myjar.app
+Fibe,fibe.in
+Kissht,kissht.com
+Niyo,goniyo.com
+CoinDCX,coindcx.com
+CoinSwitch,coinswitch.co
+Mudrex,mudrex.com
+Leap Finance,leapfinance.com
+Stashfin,stashfin.com
+Volt Money,voltmoney.in
+Zolve,zolve.com
+FinBox,finbox.in
+Credgenics,credgenics.com
+Clear,clear.in
+Progcap,progcap.com
+OfBusiness,ofbusiness.com
+InCred,incred.com
+Instamojo,instamojo.com
+Freo,freo.money
+Refyne,refyne.co.in
+BankBazaar,bankbazaar.com
+Vayana Network,vayana.com
+Lentra,lentra.ai
+Kaleidofin,kaleidofin.com
+PayNearby,paynearby.in
+Mswipe,mswipe.com
+Innoviti,innoviti.com
+Fisdom,fisdom.com
+Angel One,angelone.in
+Sensibull,sensibull.com
+Tickertape,tickertape.in
+Recur Club,recurclub.com
+Klub,klubworks.com
+Velocity,velocity.in
+GetVantage,getvantage.co
+DPDzero,dpdzero.com
+Simpl,getsimpl.com
+Snapmint,snapmint.com
+Jodo,jodo.in
+Propelld,propelld.com
+# Commerce, food, consumer brands
+Zomato,zomato.com
+Blinkit,blinkit.com
+Zepto,zeptonow.com
+Flipkart,flipkart.com
+Myntra,myntra.com
+Nykaa,nykaa.com
+Lenskart,lenskart.com
+FirstCry,firstcry.com
+Honasa Consumer,honasa.in
+boAt,boat-lifestyle.com
+Licious,licious.in
+BigBasket,bigbasket.com
+Dunzo,dunzo.com
+Urban Company,urbancompany.com
+NoBroker,nobroker.in
+Housing.com,housing.com
+Sugar Cosmetics,sugarcosmetics.com
+Purplle,purplle.com
+Bewakoof,bewakoof.com
+Snitch,snitch.co.in
+The Souled Store,thesouledstore.com
+Wakefit,wakefit.co
+Pepperfry,pepperfry.com
+Livspace,livspace.com
+HomeLane,homelane.com
+Country Delight,countrydelight.in
+FreshToHome,freshtohome.com
+Rebel Foods,rebelfoods.com
+magicpin,magicpin.in
+DotPe,dotpe.in
+Petpooja,petpooja.com
+DealShare,dealshare.in
+CityMall,citymall.live
+Udaan,udaan.com
+Jumbotail,jumbotail.com
+Ninjacart,ninjacart.com
+DeHaat,agrevolution.in
+AgroStar,agrostar.in
+WayCool,waycool.in
+Arya.ag,arya.ag
+Vegrow,vegrow.in
+Zetwerk,zetwerk.com
+Moglix,moglix.com
+Infra.Market,infra.market
+Bizongo,bizongo.com
+ElasticRun,elastic.run
+Mosaic Wellness,mosaicwellness.in
+Traya,traya.health
+Noise,gonoise.com
+Ultrahuman,ultrahuman.com
+Giva,giva.co
+Bluestone,bluestone.com
+CaratLane,caratlane.com
+Mokobara,mokobara.com
+Lahori,lahori.in
+Swiss Beauty,swissbeauty.in
+Minimalist,beminimalist.co
+# Mobility, logistics, travel
+Cars24,cars24.com
+Spinny,spinny.com
+CarDekho,cardekho.com
+Ola,olacabs.com
+Ola Electric,olaelectric.com
+Rapido,rapido.bike
+BluSmart,blu-smart.com
+Yulu,yulu.bike
+Bounce,bounceshare.com
+MakeMyTrip,makemytrip.com
+Cleartrip,cleartrip.com
+OYO,oyorooms.com
+Treebo,treebo.com
+Zoomcar,zoomcar.com
+Shiprocket,shiprocket.in
+Delhivery,delhivery.com
+Xpressbees,xpressbees.com
+Shadowfax,shadowfax.in
+Porter,porter.in
+BlackBuck,blackbuck.com
+LocoNav,loconav.com
+FarEye,getfareye.com
+Locus,locus.sh
+Shipsy,shipsy.io
+ClickPost,clickpost.ai
+Unicommerce,unicommerce.com
+GoKwik,gokwik.co
+Dukaan,mydukaan.io
+Rivigo,rivigo.com
+Ecom Express,ecomexpress.in
+Vahan,vahan.co
+# Media, gaming, social
+BookMyShow,bookmyshow.com
+Dream11,dream11.com
+Mobile Premier League,mpl.live
+Games24x7,games24x7.com
+WinZO,winzogames.com
+Zupee,zupee.com
+Rooter,rooter.gg
+Nazara Technologies,nazara.com
+ShareChat,sharechat.com
+VerSe Innovation,verse.in
+Dailyhunt,dailyhunt.in
+Inshorts,inshorts.com
+Pocket FM,pocketfm.com
+Kuku FM,kukufm.com
+Pratilipi,pratilipi.com
+JioSaavn,jiosaavn.com
+STAGE,stage.in
+Eloelo,eloelo.app
+Kutumb,kutumbapp.com
+InVideo,invideo.io
+Pixis,pixis.ai
+Airmeet,airmeet.com
+Hubilo,hubilo.com
+# Health
+Practo,practo.com
+PharmEasy,pharmeasy.in
+Tata 1mg,1mg.com
+MediBuddy,medibuddy.in
+Pristyn Care,pristyncare.com
+Eka Care,eka.care
+HealthPlix,healthplix.com
+Qure.ai,qure.ai
+Niramai,niramai.com
+Even Healthcare,even.in
+Cult.fit,cult.fit
+HealthifyMe,healthifyme.com
+Tricog,tricog.com
+Medikabazaar,medikabazaar.com
+SigTuple,sigtuple.com
+Wysa,wysa.com
+Amaha,amahahealth.com
+Truemeds,truemeds.in
+# Education and hiring
+Unacademy,unacademy.com
+Vedantu,vedantu.com
+upGrad,upgrad.com
+BYJU'S,byjus.com
+Physics Wallah,pw.live
+Eruditus,eruditus.com
+Simplilearn,simplilearn.com
+Scaler,scaler.com
+Masai School,masaischool.com
+Newton School,newtonschool.co
+Cuemath,cuemath.com
+LEAD Group,leadschool.in
+Classplus,classplus.co
+Teachmint,teachmint.com
+Testbook,testbook.com
+Adda247,adda247.com
+Doubtnut,doubtnut.com
+Leverage Edu,leverageedu.com
+Leap Scholar,leapscholar.com
+Great Learning,mygreatlearning.com
+Coding Ninjas,codingninjas.com
+Seekho,seekho.ai
+PlanetSpark,planetspark.in
+BrightCHAMPS,brightchamps.com
+Hero Vired,herovired.com
+Edureka,edureka.co
+GUVI,guvi.in
+Sunstone,sunstone.in
+Uolo,uolo.com
+Oliveboard,oliveboard.in
+Embibe,embibe.com
+Unstop,unstop.com
+Internshala,internshala.com
+WorkIndia,workindia.in
+Kalvium,kalvium.com
+# EV, hardware, space, robotics
+Ather Energy,atherenergy.com
+Ultraviolette,ultraviolette.com
+River,rideriver.com
+Log9 Materials,log9materials.com
+Euler Motors,eulermotors.com
+Battery Smart,batterysmart.in
+Statiq,statiq.in
+Bolt.Earth,bolt.earth
+Zypp Electric,zypp.app
+Simple Energy,simpleenergy.in
+ideaForge,ideaforgetech.com
+Skyroot Aerospace,skyroot.in
+Agnikul Cosmos,agnikul.in
+Pixxel,pixxel.space
+Digantara,digantara.co.in
+Dhruva Space,dhruvaspace.com
+Bellatrix Aerospace,bellatrixaerospace.com
+Tonbo Imaging,tonboimaging.com
+GreyOrange,greyorange.com
+Addverb,addverb.com
+CynLr,cynlr.com
+Ati Motors,atimotors.com
+Minus Zero,minuszero.ai
+Sedemac,sedemac.com
+Unbox Robotics,unboxrobotics.com
+Exotel,exotel.com
+Mapmyindia,mapmyindia.com
+# SaaS, developer tools, AI, data
+Zoho,zoho.com
+Chargebee,chargebee.com
+Postman,postman.com
+BrowserStack,browserstack.com
+Hasura,hasura.io
+Icertis,icertis.com
+Darwinbox,darwinbox.com
+Keka,keka.com
+LeadSquared,leadsquared.com
+Whatfix,whatfix.com
+Capillary Technologies,capillarytech.com
+Kissflow,kissflow.com
+Zluri,zluri.com
+Rocketlane,rocketlane.com
+Amagi,amagi.com
+VWO,vwo.com
+Eightfold AI,eightfold.ai
+Sprinto,sprinto.com
+Scrut Automation,scrut.io
+Fyle,fylehq.com
+Leena AI,leena.ai
+SuperOps,superops.com
+LambdaTest,lambdatest.com
+Testsigma,testsigma.com
+Appsmith,appsmith.com
+ToolJet,tooljet.com
+SuperTokens,supertokens.com
+Middleware,middleware.io
+Last9,last9.io
+Facets.cloud,facets.cloud
+Devtron,devtron.ai
+Nanonets,nanonets.com
+Vue.ai,vue.ai
+Uniphore,uniphore.com
+Yellow.ai,yellow.ai
+Haptik,haptik.ai
+Gupshup,gupshup.io
+Ozonetel,ozonetel.com
+Verloop.io,verloop.io
+WebEngage,webengage.com
+MoEngage,moengage.com
+CleverTap,clevertap.com
+Netcore Cloud,netcorecloud.com
+Plivo,plivo.com
+Lyzr,lyzr.ai
+Krutrim,olakrutrim.com
+Gan.ai,gan.ai
+Spendflo,spendflo.com
+SpotDraft,spotdraft.com
+Docsumo,docsumo.com
+Locofy.ai,locofy.ai
+Composio,composio.dev
+Kapture CX,kapturecx.com
+Fractal Analytics,fractal.ai
+Tiger Analytics,tigeranalytics.com
+LatentView Analytics,latentview.com
+Mu Sigma,mu-sigma.com
+Tredence,tredence.com
+Quantiphi,quantiphi.com
+Beaconstac,beaconstac.com
+Neysa,neysa.ai
+E2E Networks,e2enetworks.com
+Arya.ai,arya.ai
+Gnani.ai,gnani.ai
+Skit.ai,skit.ai
+Vymo,getvymo.com
+Media.net,media.net
+Affle,affle.com
+Gainsight,gainsight.com
+Zuora,zuora.com
+Recruit CRM,recruitcrm.io
+DevRev,devrev.ai
+Atomicwork,atomicwork.com
+Simplismart,simplismart.ai
+Smallest.ai,smallest.ai
+Ema,ema.co
+Giga ML,gigaml.com
+CloudKeeper,cloudkeeper.com
+Zipy,zipy.ai
+Chaos Genius,chaosgenius.io
+Rattle,gorattle.com
+Gushwork,gushwork.ai
+Pepper Content,peppercontent.io
+Spyne,spyne.ai
+Infeedo,infeedo.ai
+Springworks,springworks.in
+# Global product companies with large India engineering offices
+Stripe,stripe.com
+Coinbase,coinbase.com
+Rubrik,rubrik.com
+Databricks,databricks.com
+MongoDB,mongodb.com
+Twilio,twilio.com
+ThoughtSpot,thoughtspot.com
+Harness,harness.io
+Okta,okta.com
+Moveworks,moveworks.com
+Clari,clari.com
+Highspot,highspot.com
+Nutanix,nutanix.com
+Commvault,commvault.com
+Couchbase,couchbase.com
+Zscaler,zscaler.com
+Atlassian,atlassian.com
+Uber,uber.com
+Rippling,rippling.com
+Deel,deel.com
+Confluent,confluent.io
+Snowflake,snowflake.com
+Elastic,elastic.co
+Gojek,gojek.com
+Grab,grab.com
+Intuit,intuit.com
+ServiceNow,servicenow.com
+Workday,workday.com
+Autodesk,autodesk.com
+Cohesity,cohesity.com
+Arista Networks,arista.com
+Juniper Networks,juniper.net
+Akamai,akamai.com
+Expedia Group,expediagroup.com
+Electronic Arts,ea.com
+Chegg,chegg.com
+Wise,wise.com
+Revolut,revolut.com
+Zendesk,zendesk.com
+Qualcomm,qualcomm.com
+AMD,amd.com
+Synopsys,synopsys.com
+Cadence Design Systems,cadence.com
+Palo Alto Networks,paloaltonetworks.com
+CrowdStrike,crowdstrike.com
+Informatica,informatica.com
+Glean,glean.com
+Walmart Global Tech,walmart.com
+Target,target.com
+Lowe's,lowes.com
+Rakuten,rakuten.com
+NetApp,netapp.com
+VMware,vmware.com
+Red Hat,redhat.com
+Oracle,oracle.com
+SAP,sap.com
+Docker,docker.com
+GitLab,gitlab.com
+HashiCorp,hashicorp.com
+Canonical,canonical.com
+Mozilla,mozilla.org
+Automattic,automattic.com
+Hotstar,hotstar.com
+Nium,nium.com
+Gameskraft,gameskraft.com

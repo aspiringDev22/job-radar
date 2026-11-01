@@ -256,6 +256,41 @@
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
+        },
+        "last_success_at": {
+          "name": "last_success_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_error": {
+          "name": "last_error",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "consecutive_failures": {
+          "name": "consecutive_failures",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "last_role_count": {
+          "name": "last_role_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "search_vector": {
+          "name": "search_vector",
+          "type": "tsvector",
+          "primaryKey": false,
+          "notNull": false,
+          "generated": {
+            "as": "setweight(to_tsvector('english', coalesce(\"name\", '')), 'B')",
+            "type": "stored"
+          }
         }
       },
       "indexes": {},
@@ -278,6 +313,209 @@
           ]
         }
       },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.company_suggestions": {
+      "name": "company_suggestions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "host": {
+          "name": "host",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "suggestion_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'new'"
+        },
+        "times_suggested": {
+          "name": "times_suggested",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "last_suggested_at": {
+          "name": "last_suggested_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "company_suggestions_host_unique": {
+          "name": "company_suggestions_host_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "host"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.company_syncs": {
+      "name": "company_syncs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "run_id": {
+          "name": "run_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "company_id": {
+          "name": "company_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "finished_at": {
+          "name": "finished_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "jobs_found": {
+          "name": "jobs_found",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "jobs_new": {
+          "name": "jobs_new",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "jobs_reopened": {
+          "name": "jobs_reopened",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "jobs_closed": {
+          "name": "jobs_closed",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "error": {
+          "name": "error",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "company_syncs_run_id_idx": {
+          "name": "company_syncs_run_id_idx",
+          "columns": [
+            {
+              "expression": "run_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "company_syncs_run_id_sync_runs_id_fk": {
+          "name": "company_syncs_run_id_sync_runs_id_fk",
+          "tableFrom": "company_syncs",
+          "tableTo": "sync_runs",
+          "columnsFrom": [
+            "run_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "company_syncs_company_id_companies_id_fk": {
+          "name": "company_syncs_company_id_companies_id_fk",
+          "tableFrom": "company_syncs",
+          "tableTo": "companies",
+          "columnsFrom": [
+            "company_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -355,6 +593,48 @@
           "primaryKey": false,
           "notNull": false
         },
+        "canonical_seniority": {
+          "name": "canonical_seniority",
+          "type": "canonical_seniority",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'unknown'"
+        },
+        "role_family": {
+          "name": "role_family",
+          "type": "role_family",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'other'"
+        },
+        "city": {
+          "name": "city",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "region": {
+          "name": "region",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "country": {
+          "name": "country",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "work_mode": {
+          "name": "work_mode",
+          "type": "work_mode",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'unknown'"
+        },
         "employment_type": {
           "name": "employment_type",
           "type": "employment_type",
@@ -420,11 +700,47 @@
           "notNull": true,
           "default": true
         },
+        "status": {
+          "name": "status",
+          "type": "job_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'open'"
+        },
+        "closed_at": {
+          "name": "closed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dedupe_key": {
+          "name": "dedupe_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "department": {
+          "name": "department",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "embedding": {
           "name": "embedding",
           "type": "vector(1536)",
           "primaryKey": false,
           "notNull": false
+        },
+        "search_vector": {
+          "name": "search_vector",
+          "type": "tsvector",
+          "primaryKey": false,
+          "notNull": false,
+          "generated": {
+            "as": "setweight(to_tsvector('english', coalesce(\"title\", '')), 'A') || setweight(to_tsvector('english', coalesce(\"location_normalized\", '') || ' ' || coalesce(\"city\", '') || ' ' || coalesce(\"region\", '') || CASE WHEN \"is_remote\" THEN ' remote' ELSE '' END), 'C') || setweight(to_tsvector('english', coalesce(\"description_text\", '')), 'D')",
+            "type": "stored"
+          }
         }
       },
       "indexes": {
@@ -460,6 +776,21 @@
             },
             {
               "expression": "posted_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "jobs_dedupe_key_idx": {
+          "name": "jobs_dedupe_key_idx",
+          "columns": [
+            {
+              "expression": "dedupe_key",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -653,11 +984,20 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "source": {
-          "name": "source",
-          "type": "text",
+        "trigger": {
+          "name": "trigger",
+          "type": "sync_trigger",
+          "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'manual'"
+        },
+        "forced": {
+          "name": "forced",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "started_at": {
           "name": "started_at",
@@ -672,22 +1012,43 @@
           "primaryKey": false,
           "notNull": false
         },
-        "jobs_found": {
-          "name": "jobs_found",
+        "companies_ok": {
+          "name": "companies_ok",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "default": 0
         },
-        "jobs_new": {
-          "name": "jobs_new",
+        "companies_failed": {
+          "name": "companies_failed",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "default": 0
         },
-        "jobs_closed": {
-          "name": "jobs_closed",
+        "companies_skipped": {
+          "name": "companies_skipped",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "roles_added": {
+          "name": "roles_added",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "roles_reopened": {
+          "name": "roles_reopened",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "roles_closed": {
+          "name": "roles_closed",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
@@ -850,6 +1211,19 @@
         "amazon"
       ]
     },
+    "public.canonical_seniority": {
+      "name": "canonical_seniority",
+      "schema": "public",
+      "values": [
+        "intern",
+        "junior",
+        "mid",
+        "senior",
+        "staff_plus",
+        "manager",
+        "unknown"
+      ]
+    },
     "public.employment_type": {
       "name": "employment_type",
       "schema": "public",
@@ -860,6 +1234,31 @@
         "internship",
         "temporary",
         "unknown"
+      ]
+    },
+    "public.job_status": {
+      "name": "job_status",
+      "schema": "public",
+      "values": [
+        "open",
+        "closed"
+      ]
+    },
+    "public.role_family": {
+      "name": "role_family",
+      "schema": "public",
+      "values": [
+        "backend",
+        "frontend",
+        "fullstack",
+        "mobile",
+        "data",
+        "ml",
+        "devops",
+        "qa",
+        "product",
+        "design",
+        "other"
       ]
     },
     "public.saved_job_status": {
@@ -883,6 +1282,33 @@
         "staff",
         "principal",
         "executive",
+        "unknown"
+      ]
+    },
+    "public.suggestion_status": {
+      "name": "suggestion_status",
+      "schema": "public",
+      "values": [
+        "new",
+        "added",
+        "rejected"
+      ]
+    },
+    "public.sync_trigger": {
+      "name": "sync_trigger",
+      "schema": "public",
+      "values": [
+        "manual",
+        "scheduled"
+      ]
+    },
+    "public.work_mode": {
+      "name": "work_mode",
+      "schema": "public",
+      "values": [
+        "onsite",
+        "hybrid",
+        "remote",
         "unknown"
       ]
     }

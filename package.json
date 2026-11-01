@@ -10,9 +10,10 @@
     "lint": "eslint",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:seed": "node --env-file=.env scripts/seed.ts",
-    "sync": "node --env-file=.env workers/sync.ts",
-    "test": "node --test workers/normalize.test.ts workers/adapters.test.ts"
+    "db:seed": "node --env-file-if-exists=.env src/features/ingestion/scripts/seed.ts",
+    "sync": "node --env-file-if-exists=.env src/features/ingestion/scripts/sync.ts",
+    "discover": "node src/features/ingestion/scripts/discover-ats.ts",
+    "test": "node --test \"src/**/*.test.ts\""
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",

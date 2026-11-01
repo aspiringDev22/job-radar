@@ -381,5 +381,287 @@
     "ats_type": "workable",
     "ats_slug": "writesonic",
     "website": "https://writesonic.com"
+  },
+  {
+    "name": "Arista Networks",
+    "ats_type": "smartrecruiters",
+    "ats_slug": "aristanetworks",
+    "website": "https://arista.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Coinbase",
+    "ats_type": "greenhouse",
+    "ats_slug": "coinbase",
+    "website": "https://coinbase.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Commvault",
+    "ats_type": "greenhouse",
+    "ats_slug": "commvault",
+    "website": "https://commvault.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Composio",
+    "ats_type": "ashby",
+    "ats_slug": "composio",
+    "website": "https://composio.dev",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "CynLr",
+    "ats_type": "ashby",
+    "ats_slug": "cynlr",
+    "website": "https://cynlr.com"
+  },
+  {
+    "name": "Databricks",
+    "ats_type": "greenhouse",
+    "ats_slug": "databricks",
+    "website": "https://databricks.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "DevRev",
+    "ats_type": "greenhouse",
+    "ats_slug": "devrev",
+    "website": "https://devrev.ai",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Docsumo",
+    "ats_type": "lever",
+    "ats_slug": "docsumo",
+    "website": "https://docsumo.com"
+  },
+  {
+    "name": "Elastic",
+    "ats_type": "greenhouse",
+    "ats_slug": "elastic",
+    "website": "https://elastic.co",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Ema",
+    "ats_type": "ashby",
+    "ats_slug": "ema",
+    "website": "https://ema.co",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Gainsight",
+    "ats_type": "ashby",
+    "ats_slug": "gainsight",
+    "website": "https://gainsight.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Giga ML",
+    "ats_type": "ashby",
+    "ats_slug": "gigaml",
+    "website": "https://gigaml.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "GitLab",
+    "ats_type": "greenhouse",
+    "ats_slug": "gitlab",
+    "website": "https://gitlab.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Grab",
+    "ats_type": "smartrecruiters",
+    "ats_slug": "grab",
+    "website": "https://grab.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Gushwork",
+    "ats_type": "lever",
+    "ats_slug": "gushwork",
+    "website": "https://gushwork.ai"
+  },
+  {
+    "name": "Leena AI",
+    "ats_type": "workable",
+    "ats_slug": "leena-ai",
+    "website": "https://leena.ai"
+  },
+  {
+    "name": "MongoDB",
+    "ats_type": "greenhouse",
+    "ats_slug": "mongodb",
+    "website": "https://mongodb.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Okta",
+    "ats_type": "greenhouse",
+    "ats_slug": "okta",
+    "website": "https://okta.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Pocket FM",
+    "ats_type": "lever",
+    "ats_slug": "pocketfm",
+    "website": "https://pocketfm.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Rubrik",
+    "ats_type": "greenhouse",
+    "ats_slug": "rubrik",
+    "website": "https://rubrik.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Seekho",
+    "ats_type": "workable",
+    "ats_slug": "seekho",
+    "website": "https://seekho.ai"
+  },
+  {
+    "name": "ServiceNow",
+    "ats_type": "smartrecruiters",
+    "ats_slug": "servicenow",
+    "website": "https://servicenow.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Smallest.ai",
+    "ats_type": "ashby",
+    "ats_slug": "smallest",
+    "website": "https://smallest.ai"
+  },
+  {
+    "name": "Snowflake",
+    "ats_type": "ashby",
+    "ats_slug": "snowflake",
+    "website": "https://snowflake.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "SpotDraft",
+    "ats_type": "ashby",
+    "ats_slug": "spotdraft",
+    "website": "https://spotdraft.com"
+  },
+  {
+    "name": "Stripe",
+    "ats_type": "greenhouse",
+    "ats_slug": "stripe",
+    "website": "https://stripe.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Tiger Analytics",
+    "ats_type": "workable",
+    "ats_slug": "tiger-analytics",
+    "website": "https://tigeranalytics.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Twilio",
+    "ats_type": "greenhouse",
+    "ats_slug": "twilio",
+    "website": "https://twilio.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Zeta",
+    "ats_type": "lever",
+    "ats_slug": "zeta",
+    "website": "https://zeta.tech"
+  },
+  {
+    "name": "Zscaler",
+    "ats_type": "greenhouse",
+    "ats_slug": "zscaler",
+    "website": "https://zscaler.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Zuora",
+    "ats_type": "greenhouse",
+    "ats_slug": "zuora",
+    "website": "https://zuora.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "BrowserStack",
+    "ats_type": "workday",
+    "ats_slug": "wd3/browserstack/External",
+    "website": "https://browserstack.com"
+  },
+  {
+    "name": "CrowdStrike",
+    "ats_type": "workday",
+    "ats_slug": "wd5/crowdstrike/crowdstrikecareers",
+    "website": "https://crowdstrike.com"
+  },
+  {
+    "name": "Expedia Group",
+    "ats_type": "workday",
+    "ats_slug": "wd108/expedia/search",
+    "website": "https://expediagroup.com"
+  },
+  {
+    "name": "Fractal Analytics",
+    "ats_type": "workday",
+    "ats_slug": "wd1/fractal/Careers",
+    "website": "https://fractal.ai"
+  },
+  {
+    "name": "Nium",
+    "ats_type": "lever",
+    "ats_slug": "nium",
+    "website": "https://nium.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Palo Alto Networks",
+    "ats_type": "workday",
+    "ats_slug": "wd5/paloaltonetworks/panwexternalcareers",
+    "website": "https://paloaltonetworks.com"
+  },
+  {
+    "name": "Quantiphi",
+    "ats_type": "workday",
+    "ats_slug": "wd1/quantiphi/Careers_at_Quantiphi",
+    "website": "https://quantiphi.com"
+  },
+  {
+    "name": "Red Hat",
+    "ats_type": "workday",
+    "ats_slug": "wd5/redhat/jobs",
+    "website": "https://redhat.com"
+  },
+  {
+    "name": "Target",
+    "ats_type": "workday",
+    "ats_slug": "wd5/target/targetcareers",
+    "website": "https://target.com"
+  },
+  {
+    "name": "Uniphore",
+    "ats_type": "workday",
+    "ats_slug": "wd503/uniphore/Uniphore",
+    "website": "https://uniphore.com"
+  },
+  {
+    "name": "Workday",
+    "ats_type": "workday",
+    "ats_slug": "wd5/workday/Workday",
+    "website": "https://workday.com"
+  },
+  {
+    "name": "Zendesk",
+    "ats_type": "workday",
+    "ats_slug": "wd1/zendesk/zendesk",
+    "website": "https://zendesk.com"
   }
 ]

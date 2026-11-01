@@ -1,14 +1,14 @@
 import { Suspense } from "react";
 
-import { Board } from "@/components/board/board";
-import { BoardSkeleton } from "@/components/board/board-skeleton";
-import { SiteHeader } from "@/components/layout/site-header";
+import { Board } from "@/features/board/components";
+import { PageSkeleton } from "@/shared/components/page-skeleton";
+import { SiteHeader } from "@/shared/components/site-header";
 
 export default function HomePage(props: PageProps<"/">) {
   return (
     <>
       <SiteHeader />
-      <Suspense fallback={<BoardSkeleton />}>
+      <Suspense fallback={<PageSkeleton />}>
         <Board searchParams={props.searchParams} />
       </Suspense>
     </>
