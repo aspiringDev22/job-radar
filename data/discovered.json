@@ -299,6 +299,19 @@
     "supported": true
   },
   {
+    "name": "LambdaTest",
+    "domain": "lambdatest.com",
+    "ats_type": "keka",
+    "ats_slug": "lambdatest",
+    "role_count": 6,
+    "india_roles": 4,
+    "sample_title": "Account Executive",
+    "sample_location": "Noida, India",
+    "confidence": "high",
+    "via": "api",
+    "supported": true
+  },
+  {
     "name": "Leena AI",
     "domain": "leena.ai",
     "ats_type": "workable",
@@ -455,6 +468,19 @@
     "supported": true
   },
   {
+    "name": "Scrut Automation",
+    "domain": "scrut.io",
+    "ats_type": "keka",
+    "ats_slug": "scrut",
+    "role_count": 9,
+    "india_roles": 9,
+    "sample_title": "Customer Success Manager",
+    "sample_location": "India, India",
+    "confidence": "high",
+    "via": "api",
+    "supported": true
+  },
+  {
     "name": "Seekho",
     "domain": "seekho.ai",
     "ats_type": "workable",
@@ -580,6 +606,32 @@
     "india_roles": 47,
     "sample_title": "AR Analyst",
     "sample_location": "Bangalore",
+    "confidence": "high",
+    "via": "api",
+    "supported": true
+  },
+  {
+    "name": "SuperOps",
+    "domain": "superops.com",
+    "ats_type": "keka",
+    "ats_slug": "superops",
+    "role_count": 1,
+    "india_roles": 1,
+    "sample_title": "Marketing Operations Specialist",
+    "sample_location": "Chennai",
+    "confidence": "high",
+    "via": "api",
+    "supported": true
+  },
+  {
+    "name": "Testsigma",
+    "domain": "testsigma.com",
+    "ats_type": "keka",
+    "ats_slug": "testsigma",
+    "role_count": 4,
+    "india_roles": 3,
+    "sample_title": "Backend Engineer",
+    "sample_location": "Bengaluru, India",
     "confidence": "high",
     "via": "api",
     "supported": true
@@ -1061,6 +1113,19 @@
     "india_roles": 3,
     "sample_title": "Senior IT Infrastructure Lead",
     "sample_location": "India - Chennai",
+    "confidence": "medium",
+    "via": "careers_page",
+    "supported": true
+  },
+  {
+    "name": "VWO",
+    "domain": "vwo.com",
+    "ats_type": "keka",
+    "ats_slug": "wingify",
+    "role_count": 23,
+    "india_roles": 18,
+    "sample_title": "Quality Assurance: Senior Software Engineer - QA",
+    "sample_location": "India, Delhi, India",
     "confidence": "medium",
     "via": "careers_page",
     "supported": true
