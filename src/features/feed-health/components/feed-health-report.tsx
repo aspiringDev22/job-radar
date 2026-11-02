@@ -148,7 +148,7 @@ export async function FeedHealthReport() {
       </p>
       <h2 className="mt-10 font-serif text-2xl tracking-tight">Recent syncs</h2>
       <p className="mt-2 text-sm text-muted-foreground">
-        Scheduled every 6 hours. A company synced in the last 4 hours is skipped.
+        Scheduled once a day, at 04:47 in India. A company synced in the last 4 hours is skipped.
       </p>
       <RecentSyncs runs={runs} />
       <h2 className="mt-10 font-serif text-2xl tracking-tight">Feeds</h2>

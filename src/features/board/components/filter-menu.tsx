@@ -1,7 +1,6 @@
 "use client";
 
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
-import Link from "next/link";
 
 import {
   DropdownMenu,
@@ -14,6 +13,7 @@ import {
 import { cn } from "@/shared/lib/utils";
 
 import { activeChipClass, chipClass } from "../lib/chip";
+import { BoardLink } from "./board-navigation";
 
 export type FilterOption = {
   label: string;
@@ -52,21 +52,21 @@ export function FilterMenu({
       <DropdownMenuContent align="start" className="w-72">
         <DropdownMenuLabel>{label}</DropdownMenuLabel>
         <DropdownMenuItem asChild>
-          <Link href={resetHref}>
+          <BoardLink href={resetHref}>
             <CheckIcon className={cn("text-signal", value ? "opacity-0" : "opacity-100")} />
             <span className="flex-1">{resetLabel}</span>
-          </Link>
+          </BoardLink>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         {options.map((option) => (
           <DropdownMenuItem key={option.href} asChild>
-            <Link href={option.href} aria-current={option.active ? "true" : undefined}>
+            <BoardLink href={option.href} aria-current={option.active ? "true" : undefined}>
               <CheckIcon className={cn("text-signal", option.active ? "opacity-100" : "opacity-0")} />
               <span className={cn("flex-1", option.active && "font-medium")}>{option.label}</span>
               {option.count !== undefined ? (
                 <span className="text-xs text-muted-foreground tabular-nums">{option.count.toLocaleString("en-IN")}</span>
               ) : null}
-            </Link>
+            </BoardLink>
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

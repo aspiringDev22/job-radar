@@ -6,13 +6,11 @@ import {
   AMAZON_TECHNICAL_DEPARTMENTS,
   groupListings,
   locationTerms,
-  postingLocations,
-  type JobDetail,
   type JobSummary,
   type ListingMember,
 } from "@/features/jobs";
 import { jobs } from "@/features/jobs/schema";
-import { jobSummaryColumns, loadLevelPay } from "@/features/jobs/server";
+import { jobSummaryColumns, loadOpenRole } from "@/features/jobs/server";
 import { getDb } from "@/shared/db/client";
 
 import { hasBoardFilters, PAGE_SIZE, searchTokens, type BoardQuery } from "../lib/query";
@@ -256,13 +254,36 @@ function toSummary(row: BoardJobRow, locationCount: number): JobSummary {
   };
 }
 
+// Enough of each role to group, rank and count the list. The full row is read only for the page shown,
+// because sending every column of every role is what made unfiltered views slow.
+const listingColumns = {
+  slug: jobs.slug,
+  companySlug: companies.slug,
+  location: jobs.locationNormalized,
+  city: jobs.city,
+  isRemote: jobs.isRemote,
+  dedupeKey: jobs.dedupeKey,
+  postedAt: jobs.postedAt,
+};
+
 export async function loadBoard(query: BoardQuery): Promise<BoardData> {
   await connection();
   const db = getDb();
   const plan = query.q ? searchPlan(query.q) : null;
   const matches = matchClauses(query, plan);
 
-  const [companyMeta, jobRows, descriptionMatches, categoryCounts] = await Promise.all([
+  // Every query that does not need the grouped list starts now, so its round trip overlaps the others.
+  const countsQuery = Promise.all([
+    plan && !query.descriptions ? countDescriptionMatches(query, plan) : Promise.resolve(0),
+    countByCategory(query, plan),
+  ]);
+  // The role a shared ?job= link opens with. Later picks are fetched by the pane itself.
+  const selectedQuery = query.job ? loadOpenRole(query.job) : Promise.resolve(null);
+  // Awaited below; this only stops an early failure elsewhere from leaving them unhandled.
+  void countsQuery.catch(() => {});
+  void selectedQuery.catch(() => {});
+
+  const [companyMeta, listingRows] = await Promise.all([
     db
       .select({
         name: companies.name,
@@ -273,17 +294,17 @@ export async function loadBoard(query: BoardQuery): Promise<BoardData> {
       .where(eq(companies.active, true)),
     db
       .select({
-        ...jobSummaryColumns,
+        ...listingColumns,
         score: plan ? searchScore(plan) : sql<number>`0`.mapWith(Number),
       })
       .from(jobs)
       .innerJoin(companies, eq(jobs.companyId, companies.id))
       .where(and(...matches, eq(companies.active, true))),
-    plan && !query.descriptions ? countDescriptionMatches(query, plan) : Promise.resolve(0),
-    countByCategory(query, plan),
   ]);
 
-  const groups = plan ? rankGroups(groupListings(jobRows), (row) => row.score) : groupListings(jobRows);
+  // Apply links are read with the page's rows; grouping does not use them.
+  const rows = listingRows.map((row) => ({ ...row, applyUrl: null }));
+  const groups = plan ? rankGroups(groupListings(rows), (row) => row.score) : groupListings(rows);
   const openRoles = new Map<string, number>();
   for (const group of groups) {
     const slug = group.representative.companySlug;
@@ -310,34 +331,25 @@ export async function loadBoard(query: BoardQuery): Promise<BoardData> {
   const newThisWeek = listGroups.filter((group) => (group.representative.postedAt?.getTime() ?? 0) >= weekAgo).length;
   const pageCount = Math.max(1, Math.ceil(listGroups.length / PAGE_SIZE));
   const page = Math.min(query.page, pageCount);
-  const list = listGroups
-    .slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
-    .map((group) => toSummary(group.representative, group.locationCount));
+  const pageGroups = listGroups.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const pageSlugs = pageGroups.map((group) => group.representative.slug);
 
-  let selected: JobDetail | null = null;
-  if (query.job) {
-    const group = listGroups.find((item) => item.members.some((member) => member.slug === query.job));
-    if (group) {
-      const shown =
-        group.locationCount > 1
-          ? group.representative
-          : (group.members.find((member) => member.slug === query.job) ?? group.representative);
-      const [copy] = await db
-        .select({ descriptionText: jobs.descriptionText })
-        .from(jobs)
-        .where(eq(jobs.slug, shown.slug))
-        .limit(1);
-      selected = {
-        ...toSummary(shown, group.locationCount),
-        descriptionText: copy?.descriptionText ?? null,
-        applyUrl: shown.applyUrl,
-        seniority: shown.seniority,
-        employmentType: shown.employmentType,
-        locations: group.locationCount > 1 ? postingLocations(group.members) : [],
-        levelPay: await loadLevelPay(shown.companySlug, shown.seniority),
-      };
-    }
-  }
+  const [pageRows, selected, [descriptionMatches, categoryCounts]] = await Promise.all([
+    pageSlugs.length > 0
+      ? db
+          .select(jobSummaryColumns)
+          .from(jobs)
+          .innerJoin(companies, eq(jobs.companyId, companies.id))
+          .where(inArray(jobs.slug, pageSlugs))
+      : Promise.resolve([]),
+    selectedQuery,
+    countsQuery,
+  ]);
+  const rowBySlug = new Map(pageRows.map((row) => [row.slug, row]));
+  const list = pageGroups.flatMap((group) => {
+    const row = rowBySlug.get(group.representative.slug);
+    return row ? [toSummary(row, group.locationCount)] : [];
+  });
 
   const updatedAt = companyMeta.reduce<Date | null>((latest, row) => {
     const value = asDate(row.latestSync);

@@ -1,11 +1,11 @@
 import { SearchXIcon } from "lucide-react";
-import Link from "next/link";
 
 import { AdSlot } from "@/features/ads/components";
 import { postedAgo, postedWithin, type JobSummary } from "@/features/jobs";
 
 import { boardHref } from "../lib/href";
 import type { BoardQuery } from "../lib/query";
+import { BoardLink } from "./board-navigation";
 import { JobCard } from "./job-card";
 
 // Roles posted this recently get a "New" badge.
@@ -14,14 +14,12 @@ const FRESH_DAYS = 2;
 export function JobList({
   jobs,
   query,
-  selectedSlug,
   filtered,
   descriptionMatches,
   descriptionsHref,
 }: {
   jobs: JobSummary[];
   query: BoardQuery;
-  selectedSlug: string | null;
   filtered: boolean;
   descriptionMatches: number;
   descriptionsHref: string;
@@ -35,12 +33,12 @@ export function JobList({
           {descriptionMatches.toLocaleString("en-IN")} {descriptionMatches === 1 ? "role mentions" : "roles mention"} your
           search in the description.
         </p>
-        <Link
+        <BoardLink
           href={descriptionsHref}
           className="mt-5 inline-flex h-9 items-center rounded-full bg-signal px-4 text-sm font-medium text-signal-foreground hover:brightness-110"
         >
           Show them
-        </Link>
+        </BoardLink>
       </div>
     );
   }
@@ -66,7 +64,6 @@ export function JobList({
           {index === 6 ? <AdSlot placement="list" /> : null}
           <JobCard
             job={job}
-            selected={job.slug === selectedSlug}
             postedLabel={postedAgo(job.postedAt)}
             fresh={postedWithin(job.postedAt, FRESH_DAYS)}
             boardHref={boardHref({

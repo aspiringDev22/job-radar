@@ -1,5 +1,4 @@
 import { CheckIcon, MapPinIcon, SearchIcon, XIcon } from "lucide-react";
-import Link from "next/link";
 
 import {
   CANONICAL_SENIORITIES,
@@ -16,6 +15,7 @@ import { cn } from "@/shared/lib/utils";
 import { activeChipClass, chipClass } from "../lib/chip";
 import { boardHref } from "../lib/href";
 import { BOARD_SOURCES, hasBoardFilters, type BoardQuery } from "../lib/query";
+import { BoardLink, BoardSearchForm } from "./board-navigation";
 import { FilterMenu } from "./filter-menu";
 
 const SENIORITY_LABELS: Record<CanonicalSeniority, string> = {
@@ -66,10 +66,8 @@ export function BoardFilters({
 
   return (
     <div className="mt-8 space-y-4">
-      <form
+      <BoardSearchForm
         key={formKey}
-        action="/"
-        role="search"
         className="flex flex-col gap-1 rounded-2xl border bg-card p-1.5 shadow-sm shadow-black/[0.03] transition-shadow focus-within:border-signal/40 focus-within:ring-4 focus-within:ring-signal/10 sm:flex-row sm:items-center"
       >
         {/* A new search keeps the filters that are already on. */}
@@ -113,7 +111,7 @@ export function BoardFilters({
         >
           Search
         </button>
-      </form>
+      </BoardSearchForm>
 
       <div className="-mx-6 flex items-center gap-2 overflow-x-auto px-6 pb-1 scrollbar-none sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0">
         <FilterMenu
@@ -176,7 +174,7 @@ export function BoardFilters({
         />
         <span aria-hidden className="mx-1 h-5 w-px shrink-0 bg-border" />
         {toggles.map((toggle) => (
-          <Link
+          <BoardLink
             key={toggle.label}
             href={toggle.href}
             aria-pressed={toggle.active}
@@ -191,16 +189,16 @@ export function BoardFilters({
               {toggle.active ? <CheckIcon className="size-3" strokeWidth={3} /> : null}
             </span>
             {toggle.label}
-          </Link>
+          </BoardLink>
         ))}
         {filtered ? (
-          <Link
+          <BoardLink
             href={boardHref({ company: query.company })}
             className="inline-flex h-9 shrink-0 items-center gap-1 rounded-full px-3 text-sm text-muted-foreground hover:text-foreground"
           >
             <XIcon className="size-3.5" />
             Clear
-          </Link>
+          </BoardLink>
         ) : null}
       </div>
 
@@ -208,7 +206,7 @@ export function BoardFilters({
         <div className="-mx-6 flex items-center gap-1 overflow-x-auto px-6 text-sm whitespace-nowrap scrollbar-none sm:mx-0 sm:flex-wrap sm:gap-y-2 sm:px-0">
           <span className="mr-2 shrink-0 text-muted-foreground">Browse</span>
           {browse.map((category) => (
-            <Link
+            <BoardLink
               key={category}
               href={href({ category })}
               className="group inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 transition-colors hover:bg-signal/10"
@@ -217,7 +215,7 @@ export function BoardFilters({
               <span className="text-xs text-muted-foreground tabular-nums">
                 {(categoryCounts[category] ?? 0).toLocaleString("en-IN")}
               </span>
-            </Link>
+            </BoardLink>
           ))}
         </div>
       ) : null}

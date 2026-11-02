@@ -1,7 +1,6 @@
 "use client";
 
 import { SearchIcon } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
 
 import { cn } from "@/shared/lib/utils";
@@ -9,6 +8,7 @@ import { cn } from "@/shared/lib/utils";
 import { boardHref } from "../lib/href";
 import type { BoardQuery } from "../lib/query";
 import type { CompanySummary } from "../types";
+import { BoardLink } from "./board-navigation";
 
 const rowClass = "flex items-center justify-between gap-3 rounded-lg px-2.5 py-1.5 text-sm transition-colors";
 
@@ -36,16 +36,16 @@ export function CompanyList({
           className="h-full w-full min-w-0 bg-transparent text-sm outline-none placeholder:text-muted-foreground/80"
         />
       </label>
-      <Link
+      <BoardLink
         href={boardHref({ ...base, company: null })}
         className={cn(rowClass, query.company ? "text-muted-foreground hover:bg-muted/70" : "bg-signal/10 font-medium")}
       >
         All companies
-      </Link>
+      </BoardLink>
       {shown.map((company) => {
         const active = company.slug === query.company;
         return (
-          <Link
+          <BoardLink
             key={company.slug}
             href={boardHref({ ...base, company: company.slug })}
             aria-current={active ? "true" : undefined}
@@ -61,7 +61,7 @@ export function CompanyList({
             >
               {company.openRoles.toLocaleString("en-IN")}
             </span>
-          </Link>
+          </BoardLink>
         );
       })}
       {shown.length === 0 ? <p className="px-2.5 py-2 text-sm text-muted-foreground">No company matches.</p> : null}

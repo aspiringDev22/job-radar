@@ -2,29 +2,31 @@
 
 import { MapPinIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import { formatSalary, listPlaceLabel, type JobSummary } from "@/features/jobs";
 import { CompanyMark } from "@/shared/components/company-mark";
 import { cn } from "@/shared/lib/utils";
 
+import { prefetchRole } from "./role-store";
+
 // One compact row: title and age on the first line, company, place and pay on the second.
 // Colour is kept for what helps a scan: new roles, remote roles and published pay.
+// On wide screens a click opens the role in the pane beside the list without a server render;
+// below that, the link opens the role's own page.
 export function JobCard({
   job,
   boardHref,
-  selected,
   postedLabel,
   fresh,
 }: {
   job: JobSummary;
   boardHref: string;
-  selected: boolean;
   postedLabel: string;
   // Posted in the last two days.
   fresh: boolean;
 }) {
-  const router = useRouter();
+  const selected = useSearchParams().get("job") === job.slug;
   // A remote role shows its listed place, if any, beside the Remote chip.
   const place = job.locationCount === 1 && job.isRemote ? job.location : listPlaceLabel(job);
   const salary = formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency);
@@ -35,6 +37,8 @@ export function JobCard({
       href={`/jobs/${job.slug}`}
       scroll={false}
       aria-current={selected ? "true" : undefined}
+      onPointerEnter={() => prefetchRole(job.slug)}
+      onFocus={() => prefetchRole(job.slug)}
       onClick={(event) => {
         if (
           event.metaKey ||
@@ -47,7 +51,8 @@ export function JobCard({
         }
         if (window.matchMedia("(min-width: 1024px)").matches) {
           event.preventDefault();
-          router.push(boardHref, { scroll: false });
+          prefetchRole(job.slug);
+          window.history.pushState(null, "", boardHref);
         }
       }}
       className={cn(

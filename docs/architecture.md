@@ -55,7 +55,7 @@ A feature exposes up to four files. Each exists because the same feature is cons
 | `index.ts` | Types, constants, pure functions. No JSX, database, Next or Node built-ins. | Client components, server code, Node scripts |
 | `schema.ts` | Drizzle tables and enums | Server code, Node scripts, drizzle-kit |
 | `server.ts` | Database loaders, request helpers | Next server only (routes, server components, proxy) |
-| `components.ts` | React components | Routes and other features' server components |
+| `components.ts` | React components, free of server code so client components can import them too | Routes and other features' components |
 
 Client components (`"use client"`) import other features only through `index.ts`. That keeps the database driver out of browser bundles.
 

@@ -1,22 +1,17 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
 
 import { siteUrl } from "@/shared/lib/site";
 
 import { formatSalary, postedAgo, sourceLabel } from "../lib/format";
 import { jobPostingJsonLd, serializeJsonLd } from "../lib/job-posting";
 import { listPlaceLabel } from "../lib/listing";
-import { loadJob } from "../server/queries";
+import type { JobRecord } from "../types";
 import { JobLocations } from "./job-locations";
 import { LevelPayNote } from "./level-pay";
 
-export async function JobArticle({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const job = await loadJob(slug);
-  if (!job) {
-    notFound();
-  }
-
+// The route loads the role, so this file stays free of server code and the components entry
+// stays safe to import from client components.
+export function JobArticle({ job }: { job: JobRecord }) {
   const place = listPlaceLabel(job);
   const manyLocations = job.locations.length > 1;
   const salary = formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency);

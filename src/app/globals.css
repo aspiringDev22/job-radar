@@ -156,6 +156,16 @@
   }
 }
 
+/* The thin bar under the header while the board loads a new list. */
+@keyframes board-progress {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+
 @utility scrollbar-thin {
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;

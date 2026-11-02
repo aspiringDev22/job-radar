@@ -18,7 +18,7 @@ Someone in India looking at startup and MNC roles, who wants the posting from th
 
 **Pay.** A role shows the salary only when that posting publishes a range, in the posting's own currency. If at least two roles at the same company and seniority publish a range, the page also shows a typical range: the median within the most common currency, with the currency and the number of roles named. There is no INR conversion. There are no Glassdoor or AmbitionBox ratings.
 
-**Ingestion.** `data/companies.json` is the company list. `pnpm db:seed` upserts it and closes roles for companies removed from the file. `pnpm sync` reads the public feeds and runs every six hours from `.github/workflows/sync.yml`. A company synced in the last 4 hours is skipped unless you pass `--force`. One failing company does not stop the run. Each run is recorded in `sync_runs`, with one `company_syncs` row per company.
+**Ingestion.** `data/companies.json` is the company list. `pnpm db:seed` upserts it and closes roles for companies removed from the file. `pnpm sync` reads the public feeds and runs once a day from `.github/workflows/sync.yml`. A company synced in the last 4 hours is skipped unless you pass `--force`. One failing company does not stop the run. Each run is recorded in `sync_runs`, with one `company_syncs` row per company.
 
 Feeds in use: Greenhouse, Lever, Ashby, Workable, SmartRecruiters, Recruitee, Workday, Keka, and Amazon’s own search.
 

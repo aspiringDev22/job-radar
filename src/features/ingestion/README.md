@@ -2,7 +2,7 @@
 
 Reads public career feeds into Postgres. Nothing here runs during a page request.
 
-- `scripts/sync.ts` (`pnpm sync`) parses the flags and calls `server/run-sync.ts`. The GitHub workflow `.github/workflows/sync.yml` runs it every six hours with `--scheduled`.
+- `scripts/sync.ts` (`pnpm sync`) parses the flags and calls `server/run-sync.ts`. The GitHub workflow `.github/workflows/sync.yml` runs it once a day with `--scheduled`.
 - `server/run-sync.ts` takes the advisory lock, writes the run-level `sync_runs` row, skips companies synced in the last four hours, and syncs the rest two at a time. `server/sync-company.ts` syncs one company: it upserts `jobs`, closes roles missing from a successful fetch, and records a `company_syncs` row and the company's health columns.
 - `scripts/seed.ts` (`pnpm db:seed`) upserts `data/companies.json` and closes roles of companies removed from it. Pass `--dry-run` to print the changes first.
 - `adapters/` has one adapter per ATS: Greenhouse, Lever, Ashby, Workable, SmartRecruiters, Recruitee, Workday and Amazon. Each returns the `NormalizedJob` shape in `types.ts`. `adapters/fixtures` holds the payloads that `adapters.test.ts` parses.

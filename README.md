@@ -34,7 +34,7 @@ If you use Neon instead of Docker, `neon init` writes both connection strings in
 | `pnpm db:generate` | Write a SQL migration from the Drizzle schema |
 | `pnpm db:migrate` | Apply migrations in `drizzle/` |
 | `pnpm db:seed` | Upsert `data/companies.json`. Companies removed from the file are marked inactive and their roles are closed. |
-| `pnpm sync` | Read Greenhouse, Lever, Ashby, Workable, SmartRecruiters, Recruitee, Workday, Keka, and Amazon boards into `jobs`. Runs every six hours once scheduled (below). |
+| `pnpm sync` | Read Greenhouse, Lever, Ashby, Workable, SmartRecruiters, Recruitee, Workday, Keka, and Amazon boards into `jobs`. Runs once a day once scheduled (below). |
 | `pnpm discover` | Find which public ATS each company in `data/seed-domains.csv` uses. Writes `data/discovered.json` and `data/needs_manual.csv` for review. |
 | `pnpm test` | Run every `src/**/*.test.ts` |
 | `pnpm lint` | Run ESLint |
@@ -54,7 +54,7 @@ The run exits non-zero only when the run itself fails, for example a bad flag, a
 
 ## Scheduled sync
 
-`.github/workflows/sync.yml` runs `pnpm sync --scheduled` every six hours, at 00:17, 06:17, 12:17 and 18:17 UTC. To turn it on:
+`.github/workflows/sync.yml` runs `pnpm sync --scheduled` once a day at 23:17 UTC (04:47 in India), so the board is fresh each morning. To turn it on:
 
 1. Push the repository to GitHub. Scheduled workflows run from the default branch.
 2. Add the repository secrets `DATABASE_URL` and `DATABASE_URL_UNPOOLED` for the production database, the same two values as in `.env` when it points at Neon. The Docker database on your machine is not reachable from GitHub.
@@ -65,7 +65,7 @@ You can also start a run by hand from the Actions tab (**Run workflow**), with o
 On a server, use cron instead of the workflow:
 
 ```cron
-17 */6 * * * cd /srv/jobradar && pnpm sync --scheduled >> /var/log/jobradar-sync.log 2>&1
+17 23 * * * cd /srv/jobradar && pnpm sync --scheduled >> /var/log/jobradar-sync.log 2>&1
 ```
 
 `/admin/health` lists the last ten runs, with the companies that failed in each.
@@ -102,7 +102,11 @@ The board shows India roles by default, meaning roles whose location names an In
 
 The headline count follows every filter and toggle, for example "30 roles at Freshworks". Published pay is shown in the currency it was posted in, and nothing is converted to INR. The level pay note on a role takes the median within the most common currency and names the currency and the number of roles behind it.
 
-`q` uses Postgres full-text search. Every search word must be in the role's title, company name or location. Skills (python, react, kubernetes and about 80 others, listed in `src/features/board/lib/search.ts`) may be in the description instead, so "react developer" finds engineers whose description asks for React. Titles and locations are matched as whole words through `jobs.title_vector` (no stemming; a word also matches its plural), so "designer" does not find "Design Engineer" and "developer" does not find "Business Development". The description is matched through `jobs.search_vector` (English, stemmed), and the company name through `companies.search_vector`. All three are generated columns, so they stay current without a backfill. The list says how many roles matched only in their description, with a link to include them; "Search descriptions too" (`desc=1`) lets every word match the description. Common alternatives count as the same word, for example bangalore and bengaluru, developer and engineer, senior and sr, or frontend and front end, and two-word terms such as "machine learning" are read as one. Results rank by where each word matched (title, then company, location, description), with a boost when the title holds the whole query in order and another when the role's family matches the one the query implies. Ties go to the most recently posted. Typo tolerance is not in yet. Each role also has `/jobs/[slug]`, with JobPosting JSON-LD. The proxy answers 404 for a slug that was never stored and 410 for a role closed more than 30 days ago, before the page starts streaming. `/sitemap.xml` lists those pages. Set `NEXT_PUBLIC_SITE_URL` before sharing the sitemap.
+`q` uses Postgres full-text search. Every search word must be in the role's title, company name or location. Skills (python, react, kubernetes and about 80 others, listed in `src/features/board/lib/search.ts`) may be in the description instead, so "react developer" finds engineers whose description asks for React. Titles and locations are matched as whole words through `jobs.title_vector` (no stemming; a word also matches its plural), so "designer" does not find "Design Engineer" and "developer" does not find "Business Development". The description is matched through `jobs.search_vector` (English, stemmed), and the company name through `companies.search_vector`. All three are generated columns, so they stay current without a backfill. The list says how many roles matched only in their description, with a link to include them; "Search descriptions too" (`desc=1`) lets every word match the description. Common alternatives count as the same word, for example bangalore and bengaluru, developer and engineer, senior and sr, or frontend and front end, and two-word terms such as "machine learning" are read as one. Results rank by where each word matched (title, then company, location, description), with a boost when the title holds the whole query in order and another when the role's family matches the one the query implies. Ties go to the most recently posted. Typo tolerance is not in yet.
+
+On wide screens, picking a role does not render the board again. The row updates `?job=` with `history.pushState`, and the detail pane fetches just that role from `/api/roles/[slug]` (cached by the CDN for 5 minutes), starting when the pointer reaches the row. Filters, companies, pages and searches go through one React transition, which shows a progress bar under the header and dims the list until the new list arrives. The board reads only the columns it needs to group and count every matching role, then the full rows for the 50 on the page.
+
+Each role also has `/jobs/[slug]`, with JobPosting JSON-LD. The proxy answers 404 for a slug that was never stored and 410 for a role closed more than 30 days ago, before the page starts streaming. `/sitemap.xml` lists those pages. Set `NEXT_PUBLIC_SITE_URL` before sharing the sitemap.
 
 ## Environment
 

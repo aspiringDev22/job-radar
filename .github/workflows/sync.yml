@@ -2,8 +2,9 @@ name: Sync career feeds
 
 on:
   schedule:
-    # Every 6 hours (UTC), at 17 past to stay clear of the top-of-hour queue.
-    - cron: "17 */6 * * *"
+    # Once a day at 23:17 UTC (04:47 in India), so the board is fresh each morning.
+    # 17 past stays clear of the top-of-hour queue.
+    - cron: "17 23 * * *"
   workflow_dispatch:
     inputs:
       force:

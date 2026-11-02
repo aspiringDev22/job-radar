@@ -1,21 +1,21 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 import { boardHref } from "../lib/href";
 import type { BoardQuery } from "../lib/query";
+import { prefetchRole } from "./role-store";
 
+// Up and down step through the roles on the page, opening each in the pane as a click would.
 export function BoardHotkeys({
   slugs,
-  selectedSlug,
   query,
 }: {
   slugs: string[];
-  selectedSlug: string | null;
   query: BoardQuery;
 }) {
-  const router = useRouter();
+  const selectedSlug = useSearchParams().get("job");
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
@@ -53,20 +53,19 @@ export function BoardHotkeys({
       if (!next || next === selectedSlug) {
         return;
       }
-      router.push(
-        boardHref({
-          ...query,
-          posted: query.postedWithinDays,
-          job: next,
-        }),
-        { scroll: false },
-      );
+      prefetchRole(next);
+      window.history.pushState(null, "", boardHref({ ...query, posted: query.postedWithinDays, job: next }));
       document.getElementById(`job-${next}`)?.scrollIntoView({ block: "nearest" });
+      // Warm the role after it too, so holding the key stays quick.
+      const after = slugs[event.key === "ArrowDown" ? nextIndex + 1 : nextIndex - 1];
+      if (after) {
+        prefetchRole(after);
+      }
     }
 
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [query, router, selectedSlug, slugs]);
+  }, [query, selectedSlug, slugs]);
 
   return null;
 }

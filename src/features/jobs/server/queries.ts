@@ -8,7 +8,7 @@ import { SENIORITIES } from "../constants";
 import { groupListings, postingLocations, type JobLocation } from "../lib/listing";
 import { CLOSED_ROLE_VISIBLE_MS } from "../lib/role-status";
 import { jobs } from "../schema";
-import type { JobRecord, LevelPay } from "../types";
+import type { JobDetail, JobRecord, LevelPay } from "../types";
 
 const LEVEL_LABELS: Record<string, string> = {
   intern: "Intern",
@@ -131,26 +131,30 @@ export async function loadJob(slug: string): Promise<JobRecord | null> {
     return null;
   }
 
+  // The other cities and the level pay both need only this row, so they load together.
+  const siblingsQuery =
+    row.status === "open" && row.dedupeKey
+      ? db
+          .select({
+            slug: jobs.slug,
+            dedupeKey: jobs.dedupeKey,
+            city: jobs.city,
+            location: jobs.locationNormalized,
+            isRemote: jobs.isRemote,
+            postedAt: jobs.postedAt,
+            applyUrl: jobs.applyUrl,
+          })
+          .from(jobs)
+          .where(and(eq(jobs.dedupeKey, row.dedupeKey), eq(jobs.companyId, row.companyId), eq(jobs.isActive, true)))
+      : Promise.resolve([]);
+  const [siblings, levelPay] = await Promise.all([siblingsQuery, loadLevelPay(row.companySlug, row.seniority)]);
+
   let locationCount = 1;
   let locations: JobLocation[] = [];
-  if (row.status === "open" && row.dedupeKey) {
-    const siblings = await db
-      .select({
-        slug: jobs.slug,
-        dedupeKey: jobs.dedupeKey,
-        city: jobs.city,
-        location: jobs.locationNormalized,
-        isRemote: jobs.isRemote,
-        postedAt: jobs.postedAt,
-        applyUrl: jobs.applyUrl,
-      })
-      .from(jobs)
-      .where(and(eq(jobs.dedupeKey, row.dedupeKey), eq(jobs.companyId, row.companyId), eq(jobs.isActive, true)));
-    const group = groupListings(siblings).find((item) => item.members.some((member) => member.slug === slug));
-    if (group && group.locationCount > 1) {
-      locationCount = group.locationCount;
-      locations = postingLocations(group.members);
-    }
+  const group = groupListings(siblings).find((item) => item.members.some((member) => member.slug === slug));
+  if (group && group.locationCount > 1) {
+    locationCount = group.locationCount;
+    locations = postingLocations(group.members);
   }
 
   return {
@@ -176,7 +180,35 @@ export async function loadJob(slug: string): Promise<JobRecord | null> {
     firstSeenAt: row.firstSeenAt,
     status: row.status,
     closedAt: row.closedAt,
-    levelPay: await loadLevelPay(row.companySlug, row.seniority),
+    levelPay,
+  };
+}
+
+// What the board's detail pane shows for an open role, or null once it has closed.
+export async function loadOpenRole(slug: string): Promise<JobDetail | null> {
+  const job = await loadJob(slug);
+  if (!job || job.status !== "open") {
+    return null;
+  }
+  return {
+    slug: job.slug,
+    title: job.title,
+    companyName: job.companyName,
+    companySlug: job.companySlug,
+    location: job.location,
+    isRemote: job.isRemote,
+    locationCount: job.locationCount,
+    source: job.source,
+    postedAt: job.postedAt,
+    salaryMin: job.salaryMin,
+    salaryMax: job.salaryMax,
+    salaryCurrency: job.salaryCurrency,
+    descriptionText: job.descriptionText,
+    applyUrl: job.applyUrl,
+    seniority: job.seniority,
+    employmentType: job.employmentType,
+    locations: job.locations,
+    levelPay: job.levelPay,
   };
 }
 
