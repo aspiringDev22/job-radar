@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 import { guardAdminRequest } from "@/features/admin/server";
-import { goneJobResponse } from "@/features/jobs/server";
+import { unavailableJobResponse } from "@/features/jobs/server";
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -12,7 +12,7 @@ export async function proxy(request: NextRequest) {
 
   const slug = pathname.match(/^\/jobs\/([^/]+)$/)?.[1];
   if (slug) {
-    return (await goneJobResponse(slug)) ?? NextResponse.next();
+    return (await unavailableJobResponse(slug)) ?? NextResponse.next();
   }
   return NextResponse.next();
 }

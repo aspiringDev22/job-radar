@@ -31,6 +31,8 @@ export type SyncCompany = {
   atsType: (typeof ATS_TYPES)[number];
   atsSlug: string;
   lastSuccessAt: Date | null;
+  // Roles the last sync fetched. 0 means it found the feed empty (see holdEmptyFeed).
+  lastRoleCount: number | null;
 };
 
 export interface Adapter {

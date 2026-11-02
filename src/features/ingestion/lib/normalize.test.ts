@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  classifyCategory,
   classifyFamily,
   classifyPlace,
   classifySeniority,
@@ -81,11 +82,11 @@ const REAL_TITLES: Array<[string, string, string]> = [
   ["4463-Head of Thought Leadership", "manager", "other"],
   ["4145-Director/ Sr. Director- Growth Strategy (Payer & Public Sector)", "manager", "other"],
   ["4464 - Sr. /Manager - Product Operations", "manager", "other"],
-  ["4410 Senior Product Manager-Public Health", "manager", "product"],
-  ["4483- Senior Product Manager, AI", "manager", "product"],
-  ["4622 -APM/Product Manager-Atlas", "manager", "product"],
+  ["4410 Senior Product Manager-Public Health", "senior", "product"],
+  ["4483- Senior Product Manager, AI", "senior", "product"],
+  ["4622 -APM/Product Manager-Atlas", "junior", "product"],
   ["4809- Senior Manager- Product Designer", "manager", "design"],
-  ["QA Program Manager, Global Shared Services (GSS) Quality, Content & Learning (QCL)", "manager", "qa"],
+  ["QA Program Manager, Global Shared Services (GSS) Quality, Content & Learning (QCL)", "unknown", "qa"],
   ["Area Collection Manager - Manager - Lending Collections (Frontend)", "manager", "frontend"],
   ["Architect, Software Engineering - Frontend - Integration", "unknown", "frontend"],
   ["DevOps Engineer", "unknown", "devops"],
@@ -114,6 +115,68 @@ test("classifySeniority and classifyFamily cover real titles", () => {
     assert.equal(classifySeniority(title), seniority, title);
     assert.equal(classifyFamily(title), family, title);
   }
+});
+
+// Titles from the feeds, with the feed's department where it decides the category.
+const CATEGORY_TITLES: Array<[string, string | null, string]> = [
+  ["Senior Software Engineer", null, "engineering"],
+  ["Sr. iOS Engineer", null, "engineering"],
+  ["Software Development Engineer II, Fintech TAX - RoW Compliance", null, "engineering"],
+  ["Engineering Manager, FinHub - Financial Intelligence (Platform)", null, "engineering"],
+  ["Machine Learning Engineer", null, "ml"],
+  ["Lead Data Scientist - Healthcare", null, "ml"],
+  ["Manager, Applied Science, Minerva", null, "ml"],
+  ["Senior Azure Data Engineer", null, "data"],
+  ["Senior Business Analyst", null, "data"],
+  ["Site Reliability Engineer", null, "infrastructure"],
+  ["Data Center Technician, Data Center Operations (DCO)", null, "infrastructure"],
+  ["IT Support Associate", null, "infrastructure"],
+  ["Senior SDET", null, "qa"],
+  ["Software Security Engineer", null, "security"],
+  ["Specialist, CSIRT", null, "security"],
+  ["ASIC Verification Engineer", null, "hardware"],
+  ["Analog Design Engineer", null, "hardware"],
+  ["CPU Senior Timing Engineer", null, "hardware"],
+  ["Senior Product Manager - Credit Risk", null, "product"],
+  ["Director, Product Management, Security", null, "product"],
+  ["Sr. Technical Program Manager, Ordering", null, "program"],
+  ["Innovation Programs Lead, APJ Innovation and Engagement", null, "program"],
+  ["Senior UI UX Designer (5+ years)", null, "design"],
+  ["Senior User Researcher", null, "design"],
+  ["Senior Sales Engineer - Public Sector", null, "solutions"],
+  ["Solutions Architect, Cross Industries", null, "solutions"],
+  ["Technical Account Manager", null, "solutions"],
+  ["Account Executive, Product Sales - Tax", null, "sales"],
+  ["Area Sales Manager", null, "sales"],
+  ["KAM - Manager - Paytm Ads", null, "sales"],
+  ["Product Marketing Manager, II", null, "marketing"],
+  ["Content Lead", null, "marketing"],
+  ["Lead Technical Support Engineer", null, "customer"],
+  ["Founding Customer Success Lead", null, "customer"],
+  ["Area Manager, Inbound Operations", null, "operations"],
+  ["Procurement Manager, Logistics Procurement", null, "operations"],
+  ["Legal Counsel", null, "finance"],
+  ["Senior Tax Analyst, Withholding Tax", null, "finance"],
+  ["GSS - Tech Sourcing Recruiter , WWAS TA C Sourcing", null, "people"],
+  ["Intern- HR Onboarding", null, "people"],
+  ["Software Development Engineer II, Prime Benefits", null, "engineering"],
+  ["Senior Associate", "Fulfillment & Operations Management", "operations"],
+  ["Senior PXTBP, Amazon Entertainment", "Human Resources", "people"],
+  ["Process Assistant, BLR7 Inbound", "Fulfillment & Operations Management", "operations"],
+  ["Stay on our Radar", null, "other"],
+];
+
+test("classifyCategory sorts real titles into the board's role categories", () => {
+  for (const [title, department, category] of CATEGORY_TITLES) {
+    assert.equal(classifyCategory(title, department), category, title);
+  }
+});
+
+test("a job name beats a subject word, and the department only fills a gap", () => {
+  assert.equal(classifyCategory("Senior Product Manager - Credit Risk"), "product");
+  assert.equal(classifyCategory("Risk Manager"), "finance");
+  assert.equal(classifyCategory("Software Engineer", "Human Resources"), "engineering");
+  assert.equal(classifyCategory("Senior Associate", null), "other");
 });
 
 test("classifyPlace aliases Indian cities and work mode", () => {
@@ -208,4 +271,16 @@ test("parseSalary reads a dollar range", () => {
     max: null,
     currency: null,
   });
+});
+
+test("product and program managers are levelled by the rest of the title; people managers stay managers", () => {
+  assert.equal(classifySeniority("Principal Product Manager, Payments"), "staff_plus");
+  assert.equal(classifySeniority("Product Manager"), "unknown");
+  assert.equal(classifySeniority("Senior Technical Program Manager"), "senior");
+  assert.equal(classifySeniority("Key Account Manager"), "unknown");
+  assert.equal(classifySeniority("Group Product Manager"), "manager");
+  assert.equal(classifySeniority("Engineering Manager, Platform"), "manager");
+  assert.equal(classifySeniority("Senior Manager - Product Operations"), "manager");
+  assert.equal(classifySeniority("Director of Product Management"), "manager");
+  assert.equal(classifySeniority("Product Manager Intern"), "intern");
 });

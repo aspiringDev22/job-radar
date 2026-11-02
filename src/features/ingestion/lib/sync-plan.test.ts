@@ -1,7 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { planSuccessfulSync, rolesClosedAfterFetch, type TrackedRole } from "./sync-plan.ts";
+import {
+  EMPTY_FEED_GUARD_MIN_OPEN,
+  holdEmptyFeed,
+  planSuccessfulSync,
+  rolesClosedAfterFetch,
+  type TrackedRole,
+} from "./sync-plan.ts";
 
 function role(overrides: Partial<TrackedRole> & Pick<TrackedRole, "externalId">): TrackedRole {
   return {
@@ -39,4 +45,18 @@ test("a closed role stays closed until it is seen again", () => {
   const plan = planSuccessfulSync(existing, []);
   assert.deepEqual(plan.closing, []);
   assert.deepEqual(plan.reopening, []);
+});
+
+test("an empty feed for a company with many open roles is held, not closed", () => {
+  assert.equal(holdEmptyFeed(0, 40, 38), true);
+  assert.equal(holdEmptyFeed(0, 40, null), true);
+});
+
+test("the second empty sync in a row agrees, and the roles close", () => {
+  assert.equal(holdEmptyFeed(0, 40, 0), false);
+});
+
+test("small boards and non-empty feeds are never held", () => {
+  assert.equal(holdEmptyFeed(0, EMPTY_FEED_GUARD_MIN_OPEN, 12), false);
+  assert.equal(holdEmptyFeed(3, 40, 38), false);
 });

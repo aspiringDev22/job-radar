@@ -38,6 +38,7 @@ jobs:
       - name: Sync
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
           EVENT: ${{ github.event_name }}
           FORCE: ${{ inputs.force }}
           ONLY: ${{ inputs.only }}

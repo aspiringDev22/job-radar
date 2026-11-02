@@ -31,6 +31,22 @@ export function getDb(): Database {
   return db;
 }
 
+// One dedicated connection for session state such as advisory locks. A pooler like
+// Neon's PgBouncer hands out a different server connection per transaction, so this
+// uses the direct URL when there is one.
+export async function withDirectConnection<T>(task: (sql: postgres.Sql) => Promise<T>): Promise<T> {
+  const url = process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL;
+  if (!url) {
+    throw new Error("DATABASE_URL is not set. Copy .env.example to .env and point it at Postgres.");
+  }
+  const sql = postgres(url, { max: 1 });
+  try {
+    return await task(sql);
+  } finally {
+    await sql.end({ timeout: 5 });
+  }
+}
+
 export async function closeDb(): Promise<void> {
   const db = globalForDb.__jobradarDb;
   if (!db) {

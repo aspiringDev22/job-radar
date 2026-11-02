@@ -1,26 +1,32 @@
 "use client";
 
+import { MapPinIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { formatSalary, listPlaceLabel, sourceLabel, type JobSummary } from "@/features/jobs";
+import { formatSalary, listPlaceLabel, type JobSummary } from "@/features/jobs";
+import { CompanyMark } from "@/shared/components/company-mark";
 import { cn } from "@/shared/lib/utils";
 
-import { pillClass } from "../lib/pill";
-
+// One compact row: title and age on the first line, company, place and pay on the second.
+// Colour is kept for what helps a scan: new roles, remote roles and published pay.
 export function JobCard({
   job,
   boardHref,
   selected,
   postedLabel,
+  fresh,
 }: {
   job: JobSummary;
   boardHref: string;
   selected: boolean;
   postedLabel: string;
+  // Posted in the last two days.
+  fresh: boolean;
 }) {
   const router = useRouter();
-  const place = listPlaceLabel(job);
+  // A remote role shows its listed place, if any, beside the Remote chip.
+  const place = job.locationCount === 1 && job.isRemote ? job.location : listPlaceLabel(job);
   const salary = formatSalary(job.salaryMin, job.salaryMax, job.salaryCurrency);
 
   return (
@@ -28,6 +34,7 @@ export function JobCard({
       id={`job-${job.slug}`}
       href={`/jobs/${job.slug}`}
       scroll={false}
+      aria-current={selected ? "true" : undefined}
       onClick={(event) => {
         if (
           event.metaKey ||
@@ -44,32 +51,48 @@ export function JobCard({
         }
       }}
       className={cn(
-        "block rounded-2xl border px-5 py-4 transition-colors hover:bg-muted/40",
-        selected && "border-foreground/20 bg-muted/40",
+        "group relative flex items-start gap-3.5 px-4 py-3.5 transition-colors hover:bg-muted/50",
+        selected && "bg-signal/[0.07] hover:bg-signal/[0.07]",
       )}
     >
-      <div className="flex items-start gap-3">
-        <span
-          className={cn(
-            "mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full text-sm",
-            pillClass(job.companySlug),
-          )}
-          aria-hidden
-        >
-          {job.companyName.slice(0, 1)}
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="text-sm text-muted-foreground">{job.companyName}</p>
-          <h2 className="font-serif text-xl leading-snug tracking-tight">{job.title}</h2>
-          <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-            <span className={cn("rounded-full px-2.5 py-0.5 text-xs", pillClass(place))}>
-              {place}
+      <span
+        aria-hidden
+        className={cn(
+          "absolute inset-y-3 left-0 w-[3px] rounded-r-full bg-signal transition-opacity",
+          selected ? "opacity-100" : "opacity-0",
+        )}
+      />
+      <CompanyMark name={job.companyName} slug={job.companySlug} className="mt-0.5" />
+      <div className="min-w-0 flex-1">
+        <div className="flex items-start gap-3">
+          <h2 className="line-clamp-2 min-w-0 flex-1 font-serif text-[1.08rem] leading-snug tracking-tight">
+            {job.title}
+          </h2>
+          <span className="mt-0.5 flex shrink-0 items-center gap-1.5 text-xs text-muted-foreground">
+            {fresh ? (
+              <span className="rounded-full bg-signal/12 px-1.5 py-px text-[0.7rem] font-semibold text-signal">
+                New
+              </span>
+            ) : null}
+            {postedLabel}
+          </span>
+        </div>
+        <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[0.82rem] text-muted-foreground">
+          <span className="font-medium text-foreground/80">{job.companyName}</span>
+          {place ? (
+            <span className="flex min-w-0 items-center gap-1">
+              <MapPinIcon className="size-3.5 shrink-0 opacity-70" />
+              <span className="truncate">{place}</span>
             </span>
-            {job.locationCount === 1 && job.isRemote && job.location ? <span>{job.location}</span> : null}
-            <span>{postedLabel}</span>
-            <span>{sourceLabel(job.source)}</span>
-            {salary ? <span>{salary}</span> : null}
-          </div>
+          ) : null}
+          {job.isRemote ? (
+            <span className="rounded-full bg-sky-500/10 px-2 py-px text-xs font-medium text-sky-700 dark:text-sky-300">
+              Remote
+            </span>
+          ) : null}
+          {salary ? (
+            <span className="rounded-full bg-signal/10 px-2 py-px text-xs font-medium text-signal">{salary}</span>
+          ) : null}
         </div>
       </div>
     </Link>

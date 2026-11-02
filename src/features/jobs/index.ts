@@ -4,14 +4,17 @@ export {
   AMAZON_TECHNICAL_DEPARTMENTS,
   CANONICAL_SENIORITIES,
   EMPLOYMENT_TYPES,
+  ROLE_CATEGORIES,
   ROLE_FAMILIES,
   SENIORITIES,
   WORK_MODES,
+  type CanonicalSeniority,
   type JobStatus,
+  type RoleCategory,
   type RoleFamily,
   type Seniority,
 } from "./constants.ts";
-export { formatSalary, postedAgo, sourceLabel } from "./lib/format.ts";
+export { ROLE_CATEGORY_LABELS, formatSalary, postedAgo, postedWithin, sourceLabel } from "./lib/format.ts";
 export {
   groupListings,
   listPlaceLabel,

@@ -7,8 +7,8 @@ import { uniqueSlug } from "../../../shared/lib/slug.ts";
 
 import { adapterFor } from "../adapters/index.ts";
 import { dedupeKey } from "../lib/dedupe-key.ts";
-import { classifyFamily, classifyPlace, classifySeniority, keepListedLocation } from "../lib/normalize.ts";
-import { planSuccessfulSync } from "../lib/sync-plan.ts";
+import { classifyCategory, classifyFamily, classifyPlace, classifySeniority, keepListedLocation } from "../lib/normalize.ts";
+import { holdEmptyFeed, planSuccessfulSync } from "../lib/sync-plan.ts";
 import type { CompanyOutcome } from "../lib/sync-run.ts";
 import { companySyncs } from "../schema.ts";
 import type { NormalizedJob, SyncCompany } from "../types.ts";
@@ -33,6 +33,7 @@ function classifiedJob(company: SyncCompany, job: NormalizedJob) {
   return {
     canonicalSeniority: classifySeniority(job.title),
     roleFamily: classifyFamily(job.title),
+    category: classifyCategory(job.title, job.department ?? null),
     city: place.city,
     region: place.region,
     country: place.country,
@@ -133,6 +134,34 @@ export async function syncCompany(company: SyncCompany, context: CompanySyncCont
       existing,
       fetched.map((job) => job.externalId),
     );
+
+    const openCount = existing.filter((role) => role.isActive).length;
+    if (holdEmptyFeed(fetched.length, openCount, company.lastRoleCount)) {
+      // Recorded as a failure so the feed is retried next run and shows on /admin/health.
+      const message = `Feed returned no roles; kept ${openCount} open roles until the next sync agrees`;
+      if (dryRun) {
+        console.log(`[dry-run] ${company.name}: ${message}`);
+        return { status: "failed", error: message };
+      }
+      const heldAt = new Date();
+      if (companySyncId) {
+        await db
+          .update(companySyncs)
+          .set({ finishedAt: heldAt, jobsFound: 0, error: message })
+          .where(eq(companySyncs.id, companySyncId));
+      }
+      await db
+        .update(companies)
+        .set({
+          lastSyncedAt: heldAt,
+          lastRoleCount: 0,
+          lastError: message,
+          consecutiveFailures: sql`${companies.consecutiveFailures} + 1`,
+        })
+        .where(eq(companies.id, company.id));
+      console.error(`${company.name}: ${message}`);
+      return { status: "failed", error: message };
+    }
     const outcome: CompanyOutcome = {
       status: "ok",
       found: fetched.length,
@@ -192,6 +221,7 @@ export async function syncCompany(company: SyncCompany, context: CompanySyncCont
             seniority: sql`excluded.seniority`,
             canonicalSeniority: sql`excluded.canonical_seniority`,
             roleFamily: sql`excluded.role_family`,
+            category: sql`excluded.category`,
             city: sql`excluded.city`,
             region: sql`excluded.region`,
             country: sql`excluded.country`,

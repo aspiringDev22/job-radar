@@ -1,6 +1,7 @@
 import {
   CANONICAL_SENIORITIES,
   EMPLOYMENT_TYPES,
+  ROLE_CATEGORIES,
   ROLE_FAMILIES,
   SENIORITIES,
   WORK_MODES,
@@ -9,6 +10,7 @@ import {
 export type Seniority = (typeof SENIORITIES)[number];
 export type CanonicalSeniority = (typeof CANONICAL_SENIORITIES)[number];
 export type RoleFamily = (typeof ROLE_FAMILIES)[number];
+export type RoleCategory = (typeof ROLE_CATEGORIES)[number];
 export type WorkMode = (typeof WORK_MODES)[number];
 export type EmploymentType = (typeof EMPLOYMENT_TYPES)[number];
 
@@ -129,12 +131,20 @@ function levelMark(title: string): "iii" | "ii" | "i" | null {
   return null;
 }
 
+// "Product Manager" and its kin own work, not people, so the rest of the title sets the level:
+// "Senior Product Manager" is senior. "Group Product Manager" does manage people.
+const INDIVIDUAL_MANAGER =
+  /\b(?:product|program|programme|project|account|relationship|customer success|success|partner|partnerships|marketing|community|content|category|campaign|brand|growth)\s+manager\b/g;
+
 export function classifySeniority(title: string): CanonicalSeniority {
   const text = title.toLowerCase();
   if (/\bintern(?:ship)?s?\b/.test(text)) {
     return "intern";
   }
-  if (/\b(?:manager|director|head of)\b/.test(text)) {
+  if (/\b(?:director|head of|group product manager)\b/.test(text)) {
+    return "manager";
+  }
+  if (/\bmanager\b/.test(text.replace(INDIVIDUAL_MANAGER, " "))) {
     return "manager";
   }
   if (/\b(?:staff|principal)\b/.test(text) || /\b(?:level[\s-]*[6-9]|l[6-9])\b/.test(text)) {
@@ -147,7 +157,7 @@ export function classifySeniority(title: string): CanonicalSeniority {
   if (level === "ii") {
     return "mid";
   }
-  if (level === "i" || /\b(?:junior|jr\.?|associate)\b/.test(text)) {
+  if (level === "i" || /\b(?:junior|jr\.?|associate|apm)\b/.test(text)) {
     return "junior";
   }
   return "unknown";
@@ -186,6 +196,74 @@ export function classifyFamily(title: string): RoleFamily {
     return "product";
   }
   return "other";
+}
+
+// First match wins. Job names come before subject words, so "Product Manager - Credit Risk" is product
+// and "SDE II, Fintech TAX" is engineering, and the narrow kinds of engineer come before the
+// catch-all "engineer": "Sales Engineer" is solutions, "Design Verification Engineer" is hardware.
+const CATEGORY_RULES: Array<[RoleCategory, RegExp]> = [
+  ["marketing", /\bproduct marketing\b/],
+  ["product", /\b(?:product managers?|product owner|product management|product lead|product head|head of product|(?:director|vp|head)\W+product\b(?! (?:design|marketing))|chief product|apm|group pm)\b/],
+  ["program", /\b(?:program(?:me)?s? managers?|projects? managers?|program(?:me)? management|project management|project\/ ?program|programs? lead|projects? lead|tpm|delivery manager|scrum master|agile coach|pmo|project coordinator|program(?:me)? (?:specialist|coordinator|director|head))\b/],
+  ["people", /\b(?:recruit(?:er|ers|ing|ment)|talent (?:acquisition|partner|management|development)|sourcer|hrbp|hr (?:manager|executive|generalist|business partner|bp|operations|ops|specialist|lead|head|intern|associate|analyst|partner|coordinator|onboarding)|head (?:of )?hr|human resources?|people (?:partner|operations|ops|business partner|experience|analytics|team)|learning (?:and|&) development|l&d)\b/],
+  ["security", /\b(?:soc analyst|security|cyber ?security|infosec|appsec|secops|devsecops|penetration|pentest(?:er|ing)?|threat|vulnerability|incident response|red team|identity (?:and|&) access|csirt|forensics?|vigilance)\b/],
+  ["hardware", /\b(?:vlsi|asic|soc|rtl|fpga|dft|eda|physical design|design verification|verification engineer|analog|mixed[\s-]signal|silicon|semiconductor|pcb|circuit|hardware|firmware|embedded|board design|signal integrity|power integrity|(?:pre|post)[\s-]silicon|mechanical|electrical|electronics|thermal|layout engineer|chip|cpu|timing engineer|emulation)\b/],
+  ["ml", /\b(?:machine learning|ml|mlops|applied scien(?:ce|tist|tists)|research scientists?|data scien(?:tist|tists|ce)|deep learning|computer vision|nlp|llms?|algorithms?|ai(?:\/ml)? (?:engineer|developer|architect|researcher|research|scientist|specialist|lead)|gen ?ai (?:engineer|developer|architect|scientist)|artificial intelligence)\b/],
+  ["infrastructure", /\b(?:devops|sre|hpc|site reliability|platform engineer(?:ing)?|cloud (?:engineer|architect|ops|operations|infrastructure|support|administrator)|infrastructure|infra|network (?:engineer|administrator|architect|operations|specialist)|noc|system administrator|sysadmin|systems engineer|linux (?:admin|administrator|engineer)|database administrator|dba|data cent(?:er|re)|rack|release engineer|build engineer|it (?:support|engineer|administrator|operations|infrastructure|specialist|technician|analyst|manager|helpdesk))\b/],
+  ["data", /\b(?:data (?:engineer|engineering|engineers|analyst|analysts|analytics|architect|platform|warehouse|governance|quality|modeler|modeller|ops|lake|pipeline)|big data|analytics engineer|business intelligence|bi (?:developer|engineer|analyst)|etl)\b/],
+  ["qa", /\b(?:qa|sdet|quality assurance|quality engineer(?:ing)?|test(?:ing)? (?:engineer|automation|lead|analyst|architect|manager|specialist)|automation (?:engineer|tester)|tester|software engineer in test)\b/],
+  ["design", /\b(?:designer|designers|ux|ui ux|user experience|user research(?:er)?|product research(?:er)?|interaction design|visual design|product design|design)\b/],
+  ["solutions", /\b(?:solutions? (?:architect|engineer|engineering|consultant|specialist|lead|manager|director|partner)|sales engineer|pre[\s-]?sales|technical consultant|consultant|consulting|implementation|professional services|technical account manager|customer engineer|field applications? engineer|deployment engineer|forward deployed|deployment strategist|success architect|technical architect|engagement (?:manager|lead)|transformation)\b/],
+  ["engineering", /\b(?:software|developer|developers|development engineer|sde|programmer|engineering (?:manager|lead|director|head)|head of engineering|vp,? engineering|(?:staff|principal) engineer|back[\s-]?end|front[\s-]?end|full[\s-]?stack|mobile|android|ios|mts|smts|lmts|member of technical staff)\b/],
+  ["people", /\b(?:benefits|payroll|compensation|industrial relations|immigration|global mobility)\b/],
+  ["sales", /\b(?:sales|account executive|business development|bdr|sdr|kam|key account)\b/],
+  ["finance", /\b(?:financ(?:e|ial)|insurance|accountant|accounting|accounts (?:payable|receivable)|tax|taxation|audit(?:or|ing)?|fp&a|treasury|controller(?:ship)?|risk|compliance|legal|counsel|lawyer|attorney|paralegal|company secretary|investor relations|corporate development|credit|underwrit(?:er|ing)|collections?|fraud|kyc|aml|trust (?:and|&) safety|investigat(?:or|ion|ions)|loss prevention|sox|finops|billing|regulatory)\b/],
+  ["customer", /\b(?:customer (?:success|support|service|services|experience|care)|(?:client|partner|product|merchant|technical) (?:success|services|support|servicing)|support (?:engineer|analyst|specialist|advisor|associate|executive|agent|lead|representative)|technical support|help ?desk|service desk|cx|onboarding|trainer)\b/],
+  ["sales", /\b(?:sales|business development|biz development|bdr|sdr|bde|bdm|account executive|account (?:manager|management|director|lead)|accounts director|key account|inside sales|telesales|partnerships?|partner (?:manager|management|development)|alliances|channel (?:partner|sales|manager)|revenue|relationship manager|enterprise account|new business|deal desk|enablement|business head)\b/],
+  ["marketing", /\b(?:marketing|growth|brand|content|seo|sem|social media|community|communications?|strategist|content creator|pr|public relations|copy|copy ?writer|campaign|demand generation|events?|creative|video editor|post[\s-]production|writer|editor|editorial|affiliate|influencer|thought leadership)\b/],
+  ["operations", /\b(?:operations?|ops|supply|supply chain|logistics|procurement|purchasing|vendor|warehouse|fulfil?ment|facilities|facility|maintenance|real estate|admin|administrative|administrator|executive assistant|office (?:manager|assistant|administrator)|strategy|chief of staff|ceo'?s office|founder'?s office|process (?:associate|assistant|executive|specialist)|category (?:manager|management|lead)|merchandis(?:er|ing)|buyer|planner|planning|transcri\w*|annotat\w*|inventory|instock|transportation|fleet|delivery|store (?:manager|keeper)|city (?:manager|head)|area manager|cluster manager|last mile|dispatch|data entry|safety|ehs|whs|hygien\w*|workforce management|reservations|ticketing|supervisor|spare parts|service (?:head|manager))\b/],
+  ["engineering", /\b(?:engineer|engineers|engineering|architect|tech lead|technical lead|web|technology|r&d|cto|technologist)\b/],
+  ["data", /\b(?:analyst|analysts|analytics)\b/],
+  ["solutions", /\bsolutions?\b/],
+  ["program", /\bprogram(?:me)?s?\b/],
+];
+
+// Feed departments, for titles that name no kind of work: "Senior Associate" in Amazon's
+// "Fulfillment & Operations Management" is operations.
+const DEPARTMENT_RULES: Array<[RoleCategory, RegExp]> = [
+  ["program", /\bproject\/program\/product management\b/],
+  ["people", /\b(?:human resources|hr|people|talent|leadership development)\b/],
+  ["finance", /\b(?:financ|accounting|legal|investigation|loss prevention|risk|compliance)/],
+  ["ml", /\b(?:applied science|research science|data science|machine learning)\b/],
+  ["data", /\b(?:business intelligence|analytics|data)\b/],
+  ["design", /\bdesign\b/],
+  ["solutions", /\b(?:solutions? architect|consult|professional services)/],
+  ["infrastructure", /\b(?:it|database administration)\b/],
+  ["customer", /\b(?:customer|cs and onboarding|merchant success|product success|support)\b/],
+  ["sales", /\b(?:sales|business development|merchant development|account management|telesales)\b/],
+  ["marketing", /\b(?:marketing|growth|content|editorial|brand|pr)\b/],
+  ["operations", /\b(?:operation|fulfil|supply chain|transportation|facilities|real estate|administrative|buying|planning|instock|warehouse|procurement|delivery|fleet)/],
+  ["product", /\bproduct\b/],
+  ["hardware", /\bhardware\b/],
+  ["security", /\bsecurity\b/],
+  ["engineering", /\b(?:software|engineering|technology|tech)\b/],
+];
+
+function firstCategory(rules: Array<[RoleCategory, RegExp]>, text: string): RoleCategory | null {
+  for (const [category, pattern] of rules) {
+    if (pattern.test(text)) {
+      return category;
+    }
+  }
+  return null;
+}
+
+export function classifyCategory(title: string, department: string | null = null): RoleCategory {
+  return (
+    firstCategory(CATEGORY_RULES, title.toLowerCase()) ??
+    (department ? firstCategory(DEPARTMENT_RULES, department.toLowerCase()) : null) ??
+    "other"
+  );
 }
 
 const CITY_RULES: Array<{ pattern: RegExp; city: string; region: string | null }> = [

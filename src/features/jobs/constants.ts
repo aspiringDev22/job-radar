@@ -33,6 +33,28 @@ export const ROLE_FAMILIES = [
   "other",
 ] as const;
 
+// The kind of work, for the board's Role filter. Wider than ROLE_FAMILIES, which only splits engineering.
+export const ROLE_CATEGORIES = [
+  "engineering",
+  "ml",
+  "data",
+  "infrastructure",
+  "qa",
+  "security",
+  "hardware",
+  "product",
+  "program",
+  "design",
+  "solutions",
+  "sales",
+  "marketing",
+  "customer",
+  "operations",
+  "finance",
+  "people",
+  "other",
+] as const;
+
 export const WORK_MODES = ["onsite", "hybrid", "remote", "unknown"] as const;
 
 export const EMPLOYMENT_TYPES = [
@@ -49,6 +71,7 @@ export const JOB_STATUSES = ["open", "closed"] as const;
 export type Seniority = (typeof SENIORITIES)[number];
 export type CanonicalSeniority = (typeof CANONICAL_SENIORITIES)[number];
 export type RoleFamily = (typeof ROLE_FAMILIES)[number];
+export type RoleCategory = (typeof ROLE_CATEGORIES)[number];
 export type WorkMode = (typeof WORK_MODES)[number];
 export type EmploymentType = (typeof EMPLOYMENT_TYPES)[number];
 export type JobStatus = (typeof JOB_STATUSES)[number];

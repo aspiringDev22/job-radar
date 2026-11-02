@@ -1,11 +1,16 @@
+"use client";
+
+import { SearchIcon } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 import { cn } from "@/shared/lib/utils";
 
 import { boardHref } from "../lib/href";
-import { pillClass } from "../lib/pill";
 import type { BoardQuery } from "../lib/query";
 import type { CompanySummary } from "../types";
+
+const rowClass = "flex items-center justify-between gap-3 rounded-lg px-2.5 py-1.5 text-sm transition-colors";
 
 export function CompanyList({
   companies,
@@ -14,42 +19,52 @@ export function CompanyList({
   companies: CompanySummary[];
   query: BoardQuery;
 }) {
+  const [filter, setFilter] = useState("");
+  const needle = filter.trim().toLowerCase();
+  const shown = needle ? companies.filter((company) => company.name.toLowerCase().includes(needle)) : companies;
+  const base = { ...query, posted: query.postedWithinDays, job: null, page: null };
+
   return (
-    <nav aria-label="Companies" className="flex flex-col gap-1">
+    <nav aria-label="Companies" className="flex flex-col gap-0.5">
+      <label className="mb-2 flex h-9 items-center gap-2 rounded-lg border bg-card px-2.5 focus-within:border-signal/40">
+        <SearchIcon className="size-3.5 shrink-0 text-muted-foreground" />
+        <input
+          value={filter}
+          onChange={(event) => setFilter(event.target.value)}
+          placeholder={`Filter ${companies.length} companies`}
+          aria-label="Filter companies"
+          className="h-full w-full min-w-0 bg-transparent text-sm outline-none placeholder:text-muted-foreground/80"
+        />
+      </label>
       <Link
-        href={boardHref({ ...query, posted: query.postedWithinDays, company: null, job: null })}
-        className={cn(
-          "flex items-center justify-between rounded-xl px-3 py-2 text-sm",
-          query.company ? "text-muted-foreground hover:bg-muted/60" : "bg-muted",
-        )}
+        href={boardHref({ ...base, company: null })}
+        className={cn(rowClass, query.company ? "text-muted-foreground hover:bg-muted/70" : "bg-signal/10 font-medium")}
       >
-        <span>All companies</span>
+        All companies
       </Link>
-      {companies.map((company) => {
+      {shown.map((company) => {
         const active = company.slug === query.company;
         return (
           <Link
             key={company.slug}
-            href={boardHref({
-              ...query,
-              posted: query.postedWithinDays,
-              company: company.slug,
-              job: null,
-            })}
-            className={cn(
-              "flex items-center justify-between gap-3 rounded-xl px-3 py-2 text-sm",
-              active ? "bg-muted" : "hover:bg-muted/60",
-            )}
+            href={boardHref({ ...base, company: company.slug })}
+            aria-current={active ? "true" : undefined}
+            className={cn(rowClass, active ? "bg-signal/10 font-medium" : "hover:bg-muted/70")}
           >
             <span className="truncate">{company.name}</span>
             <span
-              className={cn("shrink-0 rounded-full px-2 py-0.5 text-xs", pillClass(company.slug))}
+              className={cn(
+                "shrink-0 text-xs tabular-nums",
+                active ? "text-signal" : "text-muted-foreground",
+                company.openRoles === 0 && "opacity-50",
+              )}
             >
-              {company.openRoles}
+              {company.openRoles.toLocaleString("en-IN")}
             </span>
           </Link>
         );
       })}
+      {shown.length === 0 ? <p className="px-2.5 py-2 text-sm text-muted-foreground">No company matches.</p> : null}
     </nav>
   );
 }

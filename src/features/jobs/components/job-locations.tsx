@@ -10,7 +10,7 @@ export function JobLocations({ locations }: { locations: JobLocation[] }) {
       {locations.map((location) => (
         <li
           key={location.slug}
-          className="flex items-center justify-between gap-4 rounded-xl border px-3 py-2 text-sm"
+          className="flex items-center justify-between gap-4 rounded-xl border bg-card px-3 py-2 text-sm"
         >
           <span>{location.label}</span>
           {location.applyUrl ? (
@@ -18,7 +18,7 @@ export function JobLocations({ locations }: { locations: JobLocation[] }) {
               href={location.applyUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex h-8 shrink-0 items-center rounded-full bg-foreground px-3 text-background"
+              className="inline-flex h-8 shrink-0 items-center rounded-full bg-signal px-3.5 font-medium text-signal-foreground transition-[filter] hover:brightness-110"
             >
               Apply
             </a>

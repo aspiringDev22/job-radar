@@ -1,22 +1,29 @@
+import type { RoleCategory } from "../constants.ts";
+
 export function postedAgo(date: Date | null, now = new Date()): string {
   if (!date) {
     return "date unknown";
   }
   const days = Math.floor((now.getTime() - date.getTime()) / 86_400_000);
   if (days <= 0) {
-    return "newest today";
+    return "today";
   }
   if (days === 1) {
-    return "newest yesterday";
+    return "yesterday";
   }
   if (days < 30) {
-    return `newest ${days} days ago`;
+    return `${days} days ago`;
   }
   return date.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
   });
+}
+
+// True when the role was posted in the last `days` days.
+export function postedWithin(date: Date | null, days: number, now = new Date()): boolean {
+  return date !== null && now.getTime() - date.getTime() < days * 86_400_000;
 }
 
 export function sourceLabel(source: string): string {
@@ -74,3 +81,24 @@ export function formatSalary(
   };
   return `${prefix}${compact(min)}–${compact(max)}`;
 }
+
+export const ROLE_CATEGORY_LABELS: Record<RoleCategory, string> = {
+  engineering: "Software engineering",
+  ml: "AI, ML and data science",
+  data: "Data and analytics",
+  infrastructure: "DevOps, cloud and IT",
+  qa: "QA and testing",
+  security: "Security",
+  hardware: "Hardware and embedded",
+  product: "Product management",
+  program: "Program and project management",
+  design: "Design and research",
+  solutions: "Solutions and consulting",
+  sales: "Sales and business development",
+  marketing: "Marketing and content",
+  customer: "Customer success and support",
+  operations: "Operations and supply chain",
+  finance: "Finance, legal and risk",
+  people: "People and HR",
+  other: "Other roles",
+};

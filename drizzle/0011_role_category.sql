@@ -1,0 +1,2 @@
+CREATE TYPE "public"."role_category" AS ENUM('engineering', 'ml', 'data', 'infrastructure', 'qa', 'security', 'hardware', 'product', 'program', 'design', 'solutions', 'sales', 'marketing', 'customer', 'operations', 'finance', 'people', 'other');--> statement-breakpoint
+ALTER TABLE "jobs" ADD COLUMN "category" "role_category" DEFAULT 'other' NOT NULL;

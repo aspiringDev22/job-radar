@@ -1,0 +1,1 @@
+ALTER TABLE "jobs" ADD COLUMN "title_vector" "tsvector" GENERATED ALWAYS AS (setweight(to_tsvector('simple', replace(coalesce("title", ''), '/', ' ')), 'A') || setweight(to_tsvector('simple', coalesce("location_normalized", '') || ' ' || coalesce("city", '') || ' ' || coalesce("region", '') || CASE WHEN "is_remote" THEN ' remote' ELSE '' END), 'C')) STORED;

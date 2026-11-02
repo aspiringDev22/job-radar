@@ -15,11 +15,18 @@ import { jobs } from "@/features/jobs/schema";
 import { jobSummaryColumns, loadLevelPay } from "@/features/jobs/server";
 import { getDb } from "@/shared/db/client";
 
-import { hasBoardFilters, searchTokens, type BoardQuery } from "../lib/query";
-import { FAMILY_BOOST, FIELD_SCORES, rankGroups, searchPlan, type SearchPlan } from "../lib/search";
+import { hasBoardFilters, PAGE_SIZE, searchTokens, type BoardQuery } from "../lib/query";
+import {
+  FAMILY_BOOST,
+  FIELD_SCORES,
+  PHRASE_BOOST,
+  rankGroups,
+  searchPlan,
+  titleForms,
+  type SearchGroup,
+  type SearchPlan,
+} from "../lib/search";
 import type { BoardData, CompanySummary } from "../types";
-
-const LIST_LIMIT = 120;
 
 function asDate(value: unknown): Date | null {
   if (value instanceof Date && !Number.isNaN(value.getTime())) {
@@ -36,20 +43,30 @@ function likePattern(value: string): string {
   return `%${value.replace(/[\\%_]/g, "\\$&")}%`;
 }
 
-function groupQuery(alternatives: string[]): SQL {
+// Stemmed, for the description and the company name.
+function englishQuery(group: SearchGroup): SQL {
   return sql`(${sql.join(
-    alternatives.map((word) => sql`plainto_tsquery('english', ${word})`),
+    group.words.map((word) => sql`phraseto_tsquery('english', ${word})`),
     sql` || `,
   )})`;
 }
 
-// A role matches when every search group matches its title, company, location or description.
-// Testing the two vectors separately is about three times faster than concatenating them.
-function searchMatch(plan: SearchPlan): SQL {
+// Whole words, for jobs.title_vector (title and location).
+function titleQuery(group: SearchGroup): SQL {
+  return sql`(${sql.join(
+    titleForms(group.words).map((word) => sql`phraseto_tsquery('simple', ${word})`),
+    sql` || `,
+  )})`;
+}
+
+// Every group must match the title, company or location. A skill may match the description instead.
+// With descriptions on, any group may match the description.
+function searchMatch(plan: SearchPlan, descriptions: boolean): SQL {
   return sql.join(
     plan.groups.map((group) => {
-      const query = groupQuery(group);
-      return sql`(${jobs.searchVector} @@ ${query} OR ${companies.searchVector} @@ ${query})`;
+      const english = englishQuery(group);
+      const anywhere = descriptions || group.skill ? sql` OR ${jobs.searchVector} @@ ${english}` : sql``;
+      return sql`(${jobs.titleVector} @@ ${titleQuery(group)} OR ${companies.searchVector} @@ ${english}${anywhere})`;
     }),
     sql` AND `,
   );
@@ -59,20 +76,29 @@ function score(value: number): SQL {
   return sql.raw(String(value));
 }
 
-// Each group scores by the best field it matched, plus a boost for the family the query implies.
+// Each group scores by the best field it matched. The whole query in order in the title adds a boost,
+// and so does the family the query implies.
 function searchScore(plan: SearchPlan): SQL<number> {
   const terms = plan.groups.map((group) => {
-    const query = groupQuery(group);
+    const title = titleQuery(group);
     return sql`CASE
-      WHEN ts_filter(${jobs.searchVector}, '{a}') @@ ${query} THEN ${score(FIELD_SCORES.a)}
-      WHEN ${companies.searchVector} @@ ${query} THEN ${score(FIELD_SCORES.b)}
-      WHEN ts_filter(${jobs.searchVector}, '{c}') @@ ${query} THEN ${score(FIELD_SCORES.c)}
+      WHEN ts_filter(${jobs.titleVector}, '{a}') @@ ${title} THEN ${score(FIELD_SCORES.a)}
+      WHEN ${companies.searchVector} @@ ${englishQuery(group)} THEN ${score(FIELD_SCORES.b)}
+      WHEN ${jobs.titleVector} @@ ${title} THEN ${score(FIELD_SCORES.c)}
       ELSE ${score(FIELD_SCORES.d)} END`;
   });
+  const [first, ...rest] = plan.groups;
+  const phrase =
+    first && rest.length > 0
+      ? sql` + CASE WHEN ts_filter(${jobs.titleVector}, '{a}') @@ ${rest.reduce(
+          (query, group) => sql`tsquery_phrase(${query}, ${titleQuery(group)})`,
+          titleQuery(first),
+        )} THEN ${score(PHRASE_BOOST)} ELSE 0 END`
+      : sql``;
   const family = plan.family
     ? sql` + CASE WHEN ${jobs.roleFamily} = ${plan.family} THEN ${score(FAMILY_BOOST)} ELSE 0 END`
     : sql``;
-  return sql<number>`(${sql.join(terms, sql` + `)})${family}`.mapWith(Number);
+  return sql<number>`(${sql.join(terms, sql` + `)})${phrase}${family}`.mapWith(Number);
 }
 
 // India roles only, unless the searcher includes remote roles from anywhere.
@@ -99,14 +125,17 @@ function matchClauses(query: BoardQuery, plan: SearchPlan | null): SQL[] {
   if (query.remote) {
     clauses.push(eq(jobs.isRemote, true));
   }
+  if (query.category) {
+    clauses.push(eq(jobs.category, query.category));
+  }
   if (query.seniority) {
-    clauses.push(eq(jobs.seniority, query.seniority));
+    clauses.push(eq(jobs.canonicalSeniority, query.seniority));
   }
   if (query.source) {
     clauses.push(eq(jobs.source, query.source));
   }
   if (plan) {
-    clauses.push(searchMatch(plan));
+    clauses.push(searchMatch(plan, query.descriptions));
   }
   if (query.postedWithinDays) {
     const since = new Date(Date.now() - query.postedWithinDays * 86_400_000);
@@ -142,6 +171,74 @@ type BoardJobRow = ListingMember & {
   employmentType: string | null;
 };
 
+// SQL counts of listings, made the way groupListings makes them: rows share a listing key when they
+// are one posting, and the posting is one listing when it names two or more places, else one per row.
+const LISTING_KEY = sql`coalesce(${jobs.dedupeKey}, 'slug:' || ${jobs.slug})`;
+const LISTING_PLACE = sql`coalesce(nullif(${jobs.city}, ''), nullif(${jobs.locationNormalized}, ''), CASE WHEN ${jobs.isRemote} THEN 'Remote' ELSE '' END)`;
+
+function listingCount(members: SQL, places: SQL): SQL {
+  return sql`sum(CASE WHEN ${places} >= 2 THEN 1 ELSE ${members} END)`;
+}
+
+function countClauses(query: BoardQuery, plan: SearchPlan | null): SQL[] {
+  const clauses = [...matchClauses(query, plan), eq(companies.active, true)];
+  if (query.company) {
+    clauses.push(eq(companies.slug, query.company));
+  }
+  return clauses;
+}
+
+// Listings that match only because a search word is in the description.
+async function countDescriptionMatches(query: BoardQuery, plan: SearchPlan): Promise<number> {
+  const db = getDb();
+  const strict = searchMatch(plan, false);
+  const buckets = db
+    .select({
+      members: sql<number>`count(*)`.as("members"),
+      places: sql<number>`count(DISTINCT ${LISTING_PLACE})`.as("places"),
+      strictMembers: sql<number>`count(*) FILTER (WHERE ${strict})`.as("strict_members"),
+      strictPlaces: sql<number>`count(DISTINCT ${LISTING_PLACE}) FILTER (WHERE ${strict})`.as("strict_places"),
+    })
+    .from(jobs)
+    .innerJoin(companies, eq(jobs.companyId, companies.id))
+    .where(and(...countClauses({ ...query, descriptions: true }, plan)))
+    .groupBy(LISTING_KEY)
+    .as("buckets");
+  const [row] = await db
+    .select({
+      count: sql<number>`coalesce(${listingCount(sql`${buckets.members}`, sql`${buckets.places}`)} - ${listingCount(
+        sql`${buckets.strictMembers}`,
+        sql`${buckets.strictPlaces}`,
+      )}, 0)`.mapWith(Number),
+    })
+    .from(buckets);
+  return row?.count ?? 0;
+}
+
+// Listings per category under every filter except the category itself, for the Role filter.
+async function countByCategory(query: BoardQuery, plan: SearchPlan | null): Promise<BoardData["categoryCounts"]> {
+  const db = getDb();
+  const buckets = db
+    .select({
+      category: jobs.category,
+      members: sql<number>`count(*)`.as("members"),
+      places: sql<number>`count(DISTINCT ${LISTING_PLACE})`.as("places"),
+    })
+    .from(jobs)
+    .innerJoin(companies, eq(jobs.companyId, companies.id))
+    .where(and(...countClauses({ ...query, category: null }, plan)))
+    .groupBy(jobs.category, LISTING_KEY)
+    .as("buckets");
+  const rows = await db
+    .select({
+      category: buckets.category,
+      count: sql<number>`${listingCount(sql`${buckets.members}`, sql`${buckets.places}`)}`.mapWith(Number),
+    })
+    .from(buckets)
+    .groupBy(buckets.category);
+  return Object.fromEntries(rows.map((row) => [row.category, row.count]));
+}
+
 function toSummary(row: BoardJobRow, locationCount: number): JobSummary {
   return {
     slug: row.slug,
@@ -165,7 +262,7 @@ export async function loadBoard(query: BoardQuery): Promise<BoardData> {
   const plan = query.q ? searchPlan(query.q) : null;
   const matches = matchClauses(query, plan);
 
-  const [companyMeta, jobRows] = await Promise.all([
+  const [companyMeta, jobRows, descriptionMatches, categoryCounts] = await Promise.all([
     db
       .select({
         name: companies.name,
@@ -182,6 +279,8 @@ export async function loadBoard(query: BoardQuery): Promise<BoardData> {
       .from(jobs)
       .innerJoin(companies, eq(jobs.companyId, companies.id))
       .where(and(...matches, eq(companies.active, true))),
+    plan && !query.descriptions ? countDescriptionMatches(query, plan) : Promise.resolve(0),
+    countByCategory(query, plan),
   ]);
 
   const groups = plan ? rankGroups(groupListings(jobRows), (row) => row.score) : groupListings(jobRows);
@@ -199,15 +298,21 @@ export async function loadBoard(query: BoardQuery): Promise<BoardData> {
     }))
     .sort((left, right) => right.openRoles - left.openRoles || left.name.localeCompare(right.name, "en"));
   const company = query.company ? (companyList.find((item) => item.slug === query.company) ?? null) : null;
+  // The picked company stays listed at 0, so the list still shows what is selected.
   if (hasBoardFilters(query)) {
-    companyList = companyList.filter((company) => company.openRoles > 0);
+    companyList = companyList.filter((item) => item.openRoles > 0 || item.slug === query.company);
   }
 
   const listGroups = query.company
     ? groups.filter((group) => group.representative.companySlug === query.company)
     : groups;
-  const truncated = listGroups.length > LIST_LIMIT;
-  const list = listGroups.slice(0, LIST_LIMIT).map((group) => toSummary(group.representative, group.locationCount));
+  const weekAgo = Date.now() - 7 * 86_400_000;
+  const newThisWeek = listGroups.filter((group) => (group.representative.postedAt?.getTime() ?? 0) >= weekAgo).length;
+  const pageCount = Math.max(1, Math.ceil(listGroups.length / PAGE_SIZE));
+  const page = Math.min(query.page, pageCount);
+  const list = listGroups
+    .slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+    .map((group) => toSummary(group.representative, group.locationCount));
 
   let selected: JobDetail | null = null;
   if (query.job) {
@@ -252,6 +357,11 @@ export async function loadBoard(query: BoardQuery): Promise<BoardData> {
     company,
     totalRoles: companyList.reduce((sum, item) => sum + item.openRoles, 0),
     updatedAt,
-    truncated,
+    listTotal: listGroups.length,
+    descriptionMatches,
+    categoryCounts,
+    newThisWeek,
+    page,
+    pageCount,
   };
 }

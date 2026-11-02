@@ -7,8 +7,8 @@ import { SiteHeader } from "@/shared/components/site-header";
 export default function HomePage(props: PageProps<"/">) {
   return (
     <>
-      <SiteHeader />
-      <Suspense fallback={<PageSkeleton />}>
+      <SiteHeader wide />
+      <Suspense fallback={<PageSkeleton wide />}>
         <Board searchParams={props.searchParams} />
       </Suspense>
     </>

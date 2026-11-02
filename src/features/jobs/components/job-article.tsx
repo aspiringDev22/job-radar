@@ -68,12 +68,12 @@ export async function JobArticle({ params }: { params: Promise<{ slug: string }>
           href={job.applyUrl}
           target="_blank"
           rel="noreferrer"
-          className="mt-6 inline-flex h-9 items-center rounded-full bg-foreground px-4 text-sm text-background"
+          className="mt-6 inline-flex h-10 items-center rounded-full bg-signal px-5 text-sm font-medium text-signal-foreground transition-[filter] hover:brightness-110"
         >
           Apply
         </a>
       ) : null}
-      <div className="mt-8 whitespace-pre-wrap text-sm leading-7 text-muted-foreground">
+      <div className="mt-8 text-[0.95rem] leading-7 whitespace-pre-wrap text-foreground/80">
         {job.descriptionText ?? "No description was published for this role."}
       </div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />

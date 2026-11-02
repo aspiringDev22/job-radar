@@ -663,5 +663,187 @@
     "ats_type": "workday",
     "ats_slug": "wd1/zendesk/zendesk",
     "website": "https://zendesk.com"
+  },
+  {
+    "name": "Adda247",
+    "ats_type": "keka",
+    "ats_slug": "adda247",
+    "website": "https://adda247.com"
+  },
+  {
+    "name": "Bolt.Earth",
+    "ats_type": "keka",
+    "ats_slug": "bolt",
+    "website": "https://bolt.earth"
+  },
+  {
+    "name": "ClickPost",
+    "ats_type": "keka",
+    "ats_slug": "clickpost",
+    "website": "https://clickpost.ai"
+  },
+  {
+    "name": "Decentro",
+    "ats_type": "keka",
+    "ats_slug": "decentro",
+    "website": "https://decentro.tech"
+  },
+  {
+    "name": "Dhan",
+    "ats_type": "keka",
+    "ats_slug": "raise",
+    "website": "https://dhan.co"
+  },
+  {
+    "name": "Digantara",
+    "ats_type": "keka",
+    "ats_slug": "digantara",
+    "website": "https://digantara.co.in"
+  },
+  {
+    "name": "Eka Care",
+    "ats_type": "keka",
+    "ats_slug": "ekacare",
+    "website": "https://eka.care"
+  },
+  {
+    "name": "Eloelo",
+    "ats_type": "keka",
+    "ats_slug": "eloelo",
+    "website": "https://eloelo.app"
+  },
+  {
+    "name": "GoKwik",
+    "ats_type": "keka",
+    "ats_slug": "gokwik",
+    "website": "https://gokwik.co"
+  },
+  {
+    "name": "Jodo",
+    "ats_type": "keka",
+    "ats_slug": "jodo",
+    "website": "https://jodo.in"
+  },
+  {
+    "name": "Jupiter",
+    "ats_type": "keka",
+    "ats_slug": "jupiter",
+    "website": "https://jupiter.money"
+  },
+  {
+    "name": "Keka",
+    "ats_type": "keka",
+    "ats_slug": "hr",
+    "website": "https://keka.com"
+  },
+  {
+    "name": "Kuku FM",
+    "ats_type": "keka",
+    "ats_slug": "kukufm",
+    "website": "https://kukufm.com"
+  },
+  {
+    "name": "LambdaTest",
+    "ats_type": "keka",
+    "ats_slug": "lambdatest",
+    "website": "https://lambdatest.com"
+  },
+  {
+    "name": "Mosaic Wellness",
+    "ats_type": "keka",
+    "ats_slug": "mosaicwellness",
+    "website": "https://mosaicwellness.in"
+  },
+  {
+    "name": "Niyo",
+    "ats_type": "keka",
+    "ats_slug": "niyo",
+    "website": "https://goniyo.com"
+  },
+  {
+    "name": "Scrut Automation",
+    "ats_type": "keka",
+    "ats_slug": "scrut",
+    "website": "https://scrut.io"
+  },
+  {
+    "name": "Signzy",
+    "ats_type": "keka",
+    "ats_slug": "signzy",
+    "website": "https://signzy.com"
+  },
+  {
+    "name": "Skit.ai",
+    "ats_type": "keka",
+    "ats_slug": "skit",
+    "website": "https://skit.ai"
+  },
+  {
+    "name": "Snitch",
+    "ats_type": "keka",
+    "ats_slug": "snitch",
+    "website": "https://snitch.co.in",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Spyne",
+    "ats_type": "keka",
+    "ats_slug": "spyneai",
+    "website": "https://spyne.ai"
+  },
+  {
+    "name": "Teachmint",
+    "ats_type": "keka",
+    "ats_slug": "teachmint",
+    "website": "https://teachmint.com"
+  },
+  {
+    "name": "Testsigma",
+    "ats_type": "keka",
+    "ats_slug": "testsigma",
+    "website": "https://testsigma.com"
+  },
+  {
+    "name": "The Souled Store",
+    "ats_type": "keka",
+    "ats_slug": "thesouledstore",
+    "website": "https://thesouledstore.com"
+  },
+  {
+    "name": "Truemeds",
+    "ats_type": "keka",
+    "ats_slug": "truemeds",
+    "website": "https://truemeds.in"
+  },
+  {
+    "name": "Unbox Robotics",
+    "ats_type": "keka",
+    "ats_slug": "unboxrobotics",
+    "website": "https://unboxrobotics.com"
+  },
+  {
+    "name": "VWO",
+    "ats_type": "keka",
+    "ats_slug": "wingify",
+    "website": "https://vwo.com"
+  },
+  {
+    "name": "WebEngage",
+    "ats_type": "keka",
+    "ats_slug": "webklipper",
+    "website": "https://webengage.com"
+  },
+  {
+    "name": "Zluri",
+    "ats_type": "keka",
+    "ats_slug": "zluri",
+    "website": "https://zluri.com",
+    "locations": "india_or_remote"
+  },
+  {
+    "name": "Zypp Electric",
+    "ats_type": "keka",
+    "ats_slug": "zypp",
+    "website": "https://zypp.app"
   }
 ]

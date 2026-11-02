@@ -18,6 +18,7 @@ import {
   CANONICAL_SENIORITIES,
   EMPLOYMENT_TYPES,
   JOB_STATUSES,
+  ROLE_CATEGORIES,
   ROLE_FAMILIES,
   SENIORITIES,
   WORK_MODES,
@@ -26,6 +27,7 @@ import {
 export const seniorityEnum = pgEnum("seniority", SENIORITIES);
 export const canonicalSeniorityEnum = pgEnum("canonical_seniority", CANONICAL_SENIORITIES);
 export const roleFamilyEnum = pgEnum("role_family", ROLE_FAMILIES);
+export const roleCategoryEnum = pgEnum("role_category", ROLE_CATEGORIES);
 export const workModeEnum = pgEnum("work_mode", WORK_MODES);
 export const employmentTypeEnum = pgEnum("employment_type", EMPLOYMENT_TYPES);
 export const jobStatusEnum = pgEnum("job_status", JOB_STATUSES);
@@ -48,6 +50,8 @@ export const jobs = pgTable(
     seniority: seniorityEnum("seniority"),
     canonicalSeniority: canonicalSeniorityEnum("canonical_seniority").notNull().default("unknown"),
     roleFamily: roleFamilyEnum("role_family").notNull().default("other"),
+    // The kind of work, from the title or else the feed's department. The board's Role filter.
+    category: roleCategoryEnum("category").notNull().default("other"),
     city: text("city"),
     region: text("region"),
     country: text("country"),
@@ -76,6 +80,12 @@ export const jobs = pgTable(
     // on companies.search_vector; the board matches each search word against either.
     searchVector: tsvector("search_vector").generatedAlwaysAs(
       sql`setweight(to_tsvector('english', coalesce("title", '')), 'A') || setweight(to_tsvector('english', coalesce("location_normalized", '') || ' ' || coalesce("city", '') || ' ' || coalesce("region", '') || CASE WHEN "is_remote" THEN ' remote' ELSE '' END), 'C') || setweight(to_tsvector('english', coalesce("description_text", '')), 'D')`,
+    ),
+    // Title A and location C as whole words, without English stemming, which would make
+    // "designer" match "Design Engineer" and "developer" match "Business Development".
+    // Slashes split, so "UI/UX Designer" holds both words.
+    titleVector: tsvector("title_vector").generatedAlwaysAs(
+      sql`setweight(to_tsvector('simple', replace(coalesce("title", ''), '/', ' ')), 'A') || setweight(to_tsvector('simple', coalesce("location_normalized", '') || ' ' || coalesce("city", '') || ' ' || coalesce("region", '') || CASE WHEN "is_remote" THEN ' remote' ELSE '' END), 'C')`,
     ),
   },
   (table) => [

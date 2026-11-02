@@ -10,7 +10,7 @@ Postgres via Drizzle. Enable pgvector before any `vector` column. Each table liv
 
 - `companies`: name, slug, website, logo, `ats_type`, `ats_slug`, active, `last_synced_at` (last attempt), `last_success_at`, `last_error`, `consecutive_failures`, `last_role_count`
 - `companies.search_vector`: generated tsvector of the name, weight B
-- `jobs`: unique `(company_id, external_id)`; index on `is_active, posted_at`; `embedding vector(1536)`; `search_vector` generated tsvector (title A, location C, description D). Never write the generated columns. `department` is the feed's own category or department (Amazon and Keka for now). `country` is `India` whenever the location names an Indian place.
+- `jobs`: unique `(company_id, external_id)`; index on `is_active, posted_at`; `embedding vector(1536)`; `search_vector` generated tsvector (title A, location C, description D, English stemming); `title_vector` generated tsvector (title A, location C, `simple` config, whole words). Never write the generated columns. `department` is the feed's own category or department (Amazon and Keka for now). `category` is the board's role category (`role_category` enum), from `classifyCategory(title, department)`; rerun `backfill-normalization.ts` after changing its rules. `country` is `India` whenever the location names an Indian place.
 - `users`: Auth.js columns plus `profile_json`, `profile_embedding`, `preferences_json`
 - `saved_jobs`: `user_id`, `job_id`, status (`saved`, `applied`, `interview`, `rejected`), notes, `updated_at`
 - `sync_runs`: one row per `pnpm sync` run: `trigger` (`manual`, `scheduled`), `forced`, timings, `companies_ok`, `companies_failed`, `companies_skipped`, `roles_added`, `roles_reopened`, `roles_closed`, error

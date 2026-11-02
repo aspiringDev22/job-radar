@@ -24,7 +24,7 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-If you use Neon or Supabase instead of Docker, put that connection string in `DATABASE_URL` before `pnpm db:migrate`.
+If you use Neon instead of Docker, `neon init` writes both connection strings into `.env`. `DATABASE_URL` is the pooled one, which the app uses. `DATABASE_URL_UNPOOLED` is the direct one, which migrations and the sync's run lock use, because a pooler hands out a different server connection per transaction. For another host, put the pooled URL in `DATABASE_URL` and the direct one in `DATABASE_URL_UNPOOLED`. With a single URL, set only `DATABASE_URL`.
 
 ## Scripts
 
@@ -48,7 +48,7 @@ If you use Neon or Supabase instead of Docker, put that connection string in `DA
 
 Pass flags after `--`, for example `pnpm sync -- --force --only swiggy`.
 
-Each run writes one `sync_runs` row: trigger, start and finish times, companies ok, failed and skipped, and roles added, reopened and closed. Each company it fetched gets a `company_syncs` row with its own counts or error. A failing company is recorded there and on the company row (`last_error`, `consecutive_failures`), and does not stop the others.
+Each run writes one `sync_runs` row: trigger, start and finish times, companies ok, failed and skipped, and roles added, reopened and closed. Each company it fetched gets a `company_syncs` row with its own counts or error. A failing company is recorded there and on the company row (`last_error`, `consecutive_failures`), and does not stop the others. A feed that suddenly returns no roles, for a company with more than 10 open, closes nothing. It is recorded as a failure, and the roles close only if the next sync also finds the feed empty.
 
 The run exits non-zero only when the run itself fails, for example a bad flag, an unreachable database or an invalid `data/companies.json`. A Postgres advisory lock stops a second sync from starting while one is running. The second one prints a message and exits 0. SmartRecruiters and Workday publish the role text one posting at a time, so the first sync of a large board such as Swiggy or Cisco takes several minutes. A full run of the 62 companies takes about 15 minutes.
 
@@ -57,7 +57,7 @@ The run exits non-zero only when the run itself fails, for example a bad flag, a
 `.github/workflows/sync.yml` runs `pnpm sync --scheduled` every six hours, at 00:17, 06:17, 12:17 and 18:17 UTC. To turn it on:
 
 1. Push the repository to GitHub. Scheduled workflows run from the default branch.
-2. Add a repository secret `DATABASE_URL` pointing at the production database. The Docker database on your machine is not reachable from GitHub.
+2. Add the repository secrets `DATABASE_URL` and `DATABASE_URL_UNPOOLED` for the production database, the same two values as in `.env` when it points at Neon. The Docker database on your machine is not reachable from GitHub.
 3. Apply migrations to that database with `pnpm db:migrate` before merging code that needs them. The workflow does not migrate.
 
 You can also start a run by hand from the Actions tab (**Run workflow**), with optional `force` and `only` inputs. GitHub may start a scheduled run a few minutes late, and it pauses schedules in a repository with no activity for 60 days.
@@ -93,7 +93,7 @@ Pass `--limit 20` or `--only "Zepto,Juspay"` to try a few companies. Results are
 
 The file is limited to Indian startups and India-based product companies whose public Greenhouse, Lever, or Ashby boards responded. Re-running `pnpm db:seed` updates name and website, leaves an existing slug stable, and closes roles for companies that were removed.
 
-Search and filters live on the home page (`q`, `location`, `remote`, `seniority`, `source`, `posted`, `company`).
+Search and filters live on the home page (`q`, `location`, `remote`, `role`, `seniority`, `source`, `posted`, `company`, `desc`, `page`). The list shows 50 roles a page. `role` is the kind of work, one of 17 categories such as software engineering, design, sales or operations (`jobs.category`, set from the title, or from the feed's department when the title names no kind of work); the Role menu shows how many roles each category has under the other filters. `seniority` uses the level read from the title (`intern`, `junior`, `mid`, `senior`, `staff_plus`, `manager`, `unknown`), so "Sr. Engineer" counts as senior even when the feed sends no level; old links with `staff`, `principal` or `executive` still work.
 
 The board shows India roles by default, meaning roles whose location names an Indian city or state, or India itself. Two toggles widen it:
 
@@ -102,11 +102,11 @@ The board shows India roles by default, meaning roles whose location names an In
 
 The headline count follows every filter and toggle, for example "30 roles at Freshworks". Published pay is shown in the currency it was posted in, and nothing is converted to INR. The level pay note on a role takes the median within the most common currency and names the currency and the number of roles behind it.
 
-`q` uses Postgres full-text search. `jobs.search_vector` weights the title A, location C and description D, and `companies.search_vector` weights the company name B. Both are generated columns, so they stay current without a backfill. Every search word must match somewhere. Common alternatives count as the same word, for example bangalore and bengaluru, developer and engineer, or frontend and front end. Results rank by where each word matched (title, then company, location, description). A role gets a boost when its family matches the one the query implies, so "react developer" favours frontend roles. Ties go to the most recently posted. Typo tolerance is not in yet. Each role also has `/jobs/[slug]`, with JobPosting JSON-LD. `/sitemap.xml` lists those pages. Set `NEXT_PUBLIC_SITE_URL` before sharing the sitemap.
+`q` uses Postgres full-text search. Every search word must be in the role's title, company name or location. Skills (python, react, kubernetes and about 80 others, listed in `src/features/board/lib/search.ts`) may be in the description instead, so "react developer" finds engineers whose description asks for React. Titles and locations are matched as whole words through `jobs.title_vector` (no stemming; a word also matches its plural), so "designer" does not find "Design Engineer" and "developer" does not find "Business Development". The description is matched through `jobs.search_vector` (English, stemmed), and the company name through `companies.search_vector`. All three are generated columns, so they stay current without a backfill. The list says how many roles matched only in their description, with a link to include them; "Search descriptions too" (`desc=1`) lets every word match the description. Common alternatives count as the same word, for example bangalore and bengaluru, developer and engineer, senior and sr, or frontend and front end, and two-word terms such as "machine learning" are read as one. Results rank by where each word matched (title, then company, location, description), with a boost when the title holds the whole query in order and another when the role's family matches the one the query implies. Ties go to the most recently posted. Typo tolerance is not in yet. Each role also has `/jobs/[slug]`, with JobPosting JSON-LD. The proxy answers 404 for a slug that was never stored and 410 for a role closed more than 30 days ago, before the page starts streaming. `/sitemap.xml` lists those pages. Set `NEXT_PUBLIC_SITE_URL` before sharing the sitemap.
 
 ## Environment
 
-Copy `.env.example` to `.env`. Local runs need `DATABASE_URL`. Set `NEXT_PUBLIC_SITE_URL` for canonical job links and the sitemap. Set `ADMIN_PASSWORD` to open `/admin/health` (HTTP Basic, any user name); it returns 404 while unset.
+Copy `.env.example` to `.env`. Local runs need `DATABASE_URL`, and `DATABASE_URL_UNPOOLED` too when `DATABASE_URL` goes through a pooler. Set `NEXT_PUBLIC_SITE_URL` for canonical job links and the sitemap. Set `ADMIN_PASSWORD` to open `/admin/health` (HTTP Basic, any user name); it returns 404 while unset.
 
 `/admin/health` lists recent sync runs and every active feed, worst first. `/admin/suggestions` lists what visitors sent through **Suggest a company** (`/suggest`), with the same password. A feed is stale after three failed syncs in a row, with no open roles, or when no open role was posted in the last 12 months. The Auth.js, Anthropic, and embeddings keys are reserved for later phases.
 

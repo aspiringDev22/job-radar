@@ -4,7 +4,7 @@ import path from "node:path";
 import { eq } from "drizzle-orm";
 
 import { companies } from "../../companies/schema.ts";
-import { getDb } from "../../../shared/db/client.ts";
+import { getDb, withDirectConnection } from "../../../shared/db/client.ts";
 
 import { adapterFor } from "../adapters/index.ts";
 import { companiesFileSchema } from "../lib/company-file.ts";
@@ -53,6 +53,7 @@ async function loadCompanies(only: string[]): Promise<SyncCompany[]> {
       atsType: companies.atsType,
       atsSlug: companies.atsSlug,
       lastSuccessAt: companies.lastSuccessAt,
+      lastRoleCount: companies.lastRoleCount,
     })
     .from(companies)
     .where(eq(companies.active, true));
@@ -143,8 +144,8 @@ export async function runSync(options: SyncOptions): Promise<RunTotals | null> {
     return totals;
   }
 
-  const lock = await getDb().$client.reserve();
-  try {
+  // The lock lives on its own direct connection; closing it also releases the lock.
+  return withDirectConnection(async (lock) => {
     const [row] = await lock<{ locked: boolean }[]>`select pg_try_advisory_lock(hashtext(${LOCK_NAME})) as locked`;
     if (!row?.locked) {
       console.log("Another sync is running. Nothing to do.");
@@ -155,7 +156,5 @@ export async function runSync(options: SyncOptions): Promise<RunTotals | null> {
     } finally {
       await lock`select pg_advisory_unlock(hashtext(${LOCK_NAME}))`;
     }
-  } finally {
-    lock.release();
-  }
+  });
 }

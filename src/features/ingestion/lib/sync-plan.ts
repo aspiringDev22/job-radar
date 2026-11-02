@@ -34,3 +34,13 @@ export function rolesClosedAfterFetch(
   }
   return planSuccessfulSync(existing, seenExternalIds).closing;
 }
+
+// A feed that suddenly lists nothing is more often broken than empty. Above this many
+// open roles, an empty successful fetch closes nothing until the next sync agrees.
+export const EMPTY_FEED_GUARD_MIN_OPEN = 10;
+
+// lastRoleCount is what the previous sync saw: 0 there means this run is the second one
+// to find the feed empty, so the roles really are gone.
+export function holdEmptyFeed(fetchedCount: number, openCount: number, lastRoleCount: number | null): boolean {
+  return fetchedCount === 0 && openCount > EMPTY_FEED_GUARD_MIN_OPEN && lastRoleCount !== 0;
+}
